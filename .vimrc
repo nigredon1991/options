@@ -36,15 +36,12 @@ call vundle#end()                    " required
 filetype on
 filetype plugin on
 filetype plugin indent on
-" Разбор vimrc в других папках
 set exrc
 set secure
 
 " Macros
 let @b="Ili**A**"
-" Don't redraw while executing macros (good performance config)
 set lazyredraw
-
 set cursorline
 set hidden
 set nofoldenable
@@ -65,7 +62,6 @@ set smartcase
 set nobackup
 set nowb
 set noswapfile
-
 set autoindent
 set tabstop=4
 set expandtab
