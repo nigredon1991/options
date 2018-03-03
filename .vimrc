@@ -7,8 +7,9 @@ filetype off                  " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-" '. - последня редактируемая строка для файла
+" '. - последняя редактируемая строка для файла
 " ctrl + o - назад положение курсора во всех файлах
+" =G - из начала файла - запустить autoindent
 
 Plugin 'gmarik/Vundle.vim'        " let Vundle manage Vundle, required
 
