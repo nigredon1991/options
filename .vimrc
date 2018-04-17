@@ -25,6 +25,8 @@ Plugin 'tpope/vim-surround'           " ysiw] - заковычить слово,
 Plugin 'tpope/vim-repeat'           
 Plugin 'vim-airline/vim-airline-themes'
 
+Plugin 'junegunn/fzf'
+
 "---------------=== Languages support ===-------------
 " --- Python ---
 "Plugin 'klen/python-mode'            " Python mode (docs, refactor, lints, highlighting, run and ipdb and more)
