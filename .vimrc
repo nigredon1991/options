@@ -1,9 +1,9 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-"=====================================================
+"== == == == == == == == == == == == == == == == == == == == == == == == == == =
 " Vundle settings
-"=====================================================
+"== == == == == == == == == == == == == == == == == == == == == == == == == == =
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -13,27 +13,23 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'        " let Vundle manage Vundle, required
 
-"---------=== Code/project navigation ===-------------
+"-------- -= == Code/project navigation == =-------------
 Plugin 'scrooloose/nerdtree'             " Project and file navigation
 Plugin 'tpope/vim-commentary'           " My commentary Fast comment - gc in visual mode
 
-"------------------=== Other ===----------------------
+"----------------- -= == Other == =----------------------
 Plugin 'vim-airline/vim-airline'               " Lean & mean status/tabline for vim
 "Plugin 'fisadev/FixedTaskList.vim'      " Pending tasks list
 "Plugin 'rosenfeld/conque-term'          " Consoles as buffers
 Plugin 'tpope/vim-surround'           " ysiw] - заковычить слово, cst} - изменить на скобки, ds} - удалить ковычки
-Plugin 'tpope/vim-repeat'           
+Plugin 'tpope/vim-repeat'
 Plugin 'vim-airline/vim-airline-themes'
 
-Plugin 'junegunn/fzf'
-
-"---------------=== Languages support ===-------------
-" --- Python ---
-"Plugin 'klen/python-mode'            " Python mode (docs, refactor, lints, highlighting, run and ipdb and more)
-"Plugin 'davidhalter/jedi-vim'         " Jedi-vim autocomplete plugin
-"Plugin 'mitsuhiko/vim-jinja'        " Jinja support for vim
-"Plugin 'mitsuhiko/vim-python-combined'  " Combined Python 2/3 for Vim
-Plugin 'scrooloose/syntastic'
+"- ------------- -= == Languages support == =-------------
+" --- Python - --
+"Plugin 'scrooloose/syntastic'
+Plugin 'w0rp/ale'          " adasd
+Plugin 'maralla/completor.vim'
 
 call vundle#end()                    " required
 filetype on
@@ -44,15 +40,15 @@ set exrc
 set secure
 
 " Macros
-let @b="Ili**A**"
-" Don't redraw while executing macros (good performance config)
+let @b = "Ili**A**"
+" Don't redraw while executing macros(good performance config)
 set lazyredraw
 
 set cursorline
 set hidden
 set nofoldenable
 set modelines=0
-"set clipboard=unnamedplus
+"set clipboard = unnamedplus
 set clipboard=unnamed
 "set synmaxcol=128 "Ломает подсветку синтаксиса в php после слишком длинной
 "строки"
@@ -75,10 +71,10 @@ set expandtab
 " set noexpandtab
 
 set splitbelow
-"set background=dark
+"set background = dark
 set cmdheight=2
 set t_Co=256
-colorscheme smyck 
+colorscheme smyck
 "
 "
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -163,46 +159,6 @@ map <F3> :NERDTreeToggle<CR>
 map <C-q> :bd<CR>        
 " CTRL+Q - закрыть текущий буффер
 
-
-
-"=====================================================
-"" Python-mode settings
-"=====================================================
-"" отключаем автокомплит по коду (у нас вместо него используется jedi-vim)
-"let g:pymode_rope = 1
-"let g:pymode_rope_completion = 1
-"let g:pymode_rope_complete_on_dot = 1
-
-" документация
-let g:pymode_doc = 1
-let g:pymode_doc_key = 'K'
-" проверка кода
-let g:pymode_lint = 1
-let g:pymode_lint_checker = "pyflakes,pep8"
-let g:pymode_lint_ignore="E501,W601,C0110"
-" провека кода после сохранения
-let g:pymode_lint_write = 1
-
-" поддержка virtualenv
-let g:pymode_virtualenv = 1
-
-" установка breakpoints
-let g:pymode_breakpoint = 1
-let g:pymode_breakpoint_key = '<leader>b'
-
-" подстветка синтаксиса
-let g:pymode_syntax = 1
-let g:pymode_syntax_all = 1
-let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-" отключить autofold по коду
-let g:pymode_folding = 1
-
-" возможность запускать код
-let g:pymode_run = 1
-let g:pymode_run_bind = '<leader>r'
-
 "==================================================
 "++ Syntastic-Settings
 ""================================================
@@ -214,3 +170,12 @@ let g:syntastic_always_populate_loc_list = 0
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+let g:syntastic_python_checkers = ['pylint']
+
+
+" Testing 
+
+let g:ale_completion_enabled = 1
+let b:ale_linters = ['flake8', 'pylint']
+let b:ale_fixers = ['autopep8', 'yapf']
+"let g:ale_fix_on_save = 1
