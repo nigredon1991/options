@@ -30,6 +30,7 @@ Plugin 'vim-airline/vim-airline-themes'
 "Plugin 'scrooloose/syntastic'
 Plugin 'w0rp/ale'          " adasd
 Plugin 'maralla/completor.vim'
+Plugin 'powerman/vim-plugin-ruscmd'
 
 call vundle#end()                    " required
 filetype on
