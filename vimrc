@@ -42,7 +42,7 @@ set exrc
 set secure
 
 " Macros
-let @b = "Ili**A**"
+" let @b = "Ili**A**"
 " Don't redraw while executing macros(good performance config)
 set lazyredraw
 
