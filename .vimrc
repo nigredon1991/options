@@ -10,6 +10,7 @@ call vundle#begin()
 " '. - последняя редактируемая строка для файла
 " ctrl + o - назад положение курсора во всех файлах
 " =G - из начала файла - запустить autoindent
+" :w !sudo dd of=% - запись через sudo
 
 Plugin 'gmarik/Vundle.vim'        " let Vundle manage Vundle, required
 
