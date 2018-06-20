@@ -6,15 +6,14 @@
 
 # better yaourt colors
 export YAOURT_COLORS="nb=1:pkg=1:ver=1;32:lver=1;45:installed=1;42:grp=1;34:od=1;41;5:votes=1;44:dsc=0:other=1;35"
-export PATH=$PATH:/home/nigredon1991/.gem/ruby/2.5.0/bin/
 export EDITOR=vim
+export HISTSIZE=10000
+export HISEFILESIZE=10000
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 . /usr/share/git/completion/git-completion.bash
 . /usr/share/git/completion/git-prompt.sh
-#PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
-#PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
 
 colors() {
 	local fgc bgc vals seq0
