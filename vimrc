@@ -32,6 +32,7 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'w0rp/ale'          " adasd
 Plugin 'maralla/completor.vim'
 Plugin 'powerman/vim-plugin-ruscmd'
+Plugin 'vim-pandoc/vim-pandoc-syntax'
 
 call vundle#end()                    " required
 filetype on
@@ -135,7 +136,7 @@ augroup vimrc_autocmds
     autocmd FileType ruby,python,javascript,php match Excess /\%80v.*/
     autocmd FileType ruby,python,javascript,php setlocal expandtab shiftwidth=4 softtabstop=4
     autocmd FileType bash,sh,hook,c,cpp  setlocal noexpandtab shiftwidth=4 softtabstop=4
-    autocmd FileType md,markdown setlocal syntax=mkd
+    autocmd FileType md,markdown setlocal syntax=mkd filetype=markdown.pandoc
 augroup END
 
 " указываем каталог с настройками SnipMate
