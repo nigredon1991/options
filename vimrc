@@ -97,7 +97,6 @@ syntax on
 set showcmd
 
 
-tab sball
 set switchbuf=useopen
 
 set visualbell
