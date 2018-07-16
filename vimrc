@@ -29,9 +29,10 @@ Plugin 'vim-airline/vim-airline-themes'
 "- ------------- -= == Languages support == =-------------
 " --- Python - --
 "Plugin 'scrooloose/syntastic'
-Plugin 'w0rp/ale'          " adasd
-Plugin 'maralla/completor.vim'
-Plugin 'powerman/vim-plugin-ruscmd'
+Plugin 'w0rp/ale'          " Asynchronous Lint Engine
+Plugin 'maralla/completor.vim' " Заканчиватель
+Plugin 'powerman/vim-plugin-ruscmd' " Команды на русском языке
+Plugin 'vim-pandoc/vim-pandoc-syntax' " Удобная подсветка для markdown
 
 call vundle#end()                    " required
 filetype on
@@ -99,7 +100,7 @@ set showcmd
 tab sball
 set switchbuf=useopen
 
-set visualbell       
+set visualbell
 set enc=utf-8     " utf-8 по дефолту в фаÐ¹лах
 set ls=2             " всегда показываем статусбар
 set incsearch     " инкреминтируемый поиск
@@ -132,7 +133,8 @@ augroup vimrc_autocmds
     autocmd FileType ruby,python,javascript,php match Excess /\%80v.*/
     autocmd FileType ruby,python,javascript,php setlocal expandtab shiftwidth=4 softtabstop=4
     autocmd FileType bash,sh,hook,c,cpp  setlocal noexpandtab shiftwidth=4 softtabstop=4
-    autocmd FileType md,markdown setlocal syntax=mkd
+    autocmd FileType md,markdown setlocal syntax=mkd filetype=markdown.pandoc shiftwidth=4 softtabstop=4
+
 augroup END
 
 " указываем каталог с настройками SnipMate
@@ -148,14 +150,14 @@ set laststatus=2
 " показать NERDTree на F3
 map <F3> :NERDTreeToggle<CR>
 "игноррируемые файлы с расширениями
-"let NERDTreeIgnore=['\~$', '\.pyc$', '\.pyo$', '\.class$','pip-log\.txt$', '\.o$']  
+"let NERDTreeIgnore=['\~$', '\.pyc$', '\.pyo$', '\.class$','pip-log\.txt$', '\.o$']
 
 " TaskList настройки
-"map <F2> :TaskList<CR>        
+"map <F2> :TaskList<CR>
 " отобразить список тасковна F2
 
 " Работа буфферами
-map <C-q> :bd<CR>        
+map <C-q> :bd<CR>
 " CTRL+Q - закрыть текущий буффер
 
 "==================================================
@@ -174,7 +176,41 @@ let g:syntastic_python_checkers = ['pylint']
 
 " Testing
 
+let g:ale_enabled = 1
+let g:ale_fix_on_save = 1
+let b:ale_linters = {
+                        \ 'python': ['flake8', 'pylint'],
+                        \'sh': ['shellcheck']
+                        \}
+
+"let b:ale_linters = 'all'
+let g:ale_fixers = {
+                        \ 'python' :['autopep8', 'yapf'],
+                        \  'sh': 'shfmt'
+                        \}
+let g:ale_set_highlights = 1
 let g:ale_completion_enabled = 1
-let b:ale_linters = ['flake8', 'pylint']
-let b:ale_fixers = ['autopep8', 'yapf']
-"let g:ale_fix_on_save = 1
+let g:airline#extensions#ale#enabled = 1
+"let g:ale_set_loclist = 0
+"let g:ale_set_quickfix = 1
+nmap <F8> <Plug>(ale_fix)
+"let g:ale_echo_cursor = 1
+"let g:ale_echo_msg_error_str = 'Error'
+"let g:ale_echo_msg_format = '%code: %%s'
+"let g:ale_echo_msg_warning_str = 'Warning'
+"let g:ale_keep_list_window_open = 0
+"let g:ale_lint_delay = 200
+"let g:ale_lint_on_enter = 1
+"let g:ale_lint_on_save = 1
+"let g:ale_lint_on_text_changed = 'always'
+"let g:ale_open_list = 0
+"let g:ale_set_highlights = 1
+"let g:ale_set_loclist = 1
+"let g:ale_set_quickfix = 0
+"let g:ale_set_signs = 1
+"let g:ale_sign_column_always = 0
+"let g:ale_sign_error = '>>'
+"let g:ale_sign_offset = 1000000
+"let g:ale_sign_warning = '--'
+"let g:ale_statusline_format = ['%d error(s)', '%d warning(s)', 'OK']
+"let g:ale_warn_about_trailing_whitespace = 1
