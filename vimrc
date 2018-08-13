@@ -225,6 +225,9 @@ let g:ale_fixers = {
                         \ 'python' :['autopep8', 'yapf'],
                         \  'sh': 'shfmt'
                         \}
+let g:ale_sh_shfmt_executable= 'shfmt'
+let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлении в
+"файл ставить пробел
 let g:ale_set_highlights = 1
 let g:ale_completion_enabled = 1
 let g:airline#extensions#ale#enabled = 1
