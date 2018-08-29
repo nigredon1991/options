@@ -213,6 +213,9 @@ set statusline+=%#warningmsg#
 
 let g:ale_enabled = 1
 let g:ale_fix_on_save = 1
+let g:ale_set_highlights = 1
+let g:ale_completion_enabled = 1
+let g:airline#extensions#ale#enabled = 1
 let b:ale_linters = {
                         \ 'python': ['pylint'],
                         \'sh': ['shellcheck']
@@ -231,29 +234,6 @@ let g:ale_sh_shfmt_options= '--sr' " Если надо будет при пер�
 let g:ale_c_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, BreakBeforeBraces: Linux, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
 let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, BreakBeforeBraces: Linux, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
 "let g:ale_c_clangformat_options = '-style=Google'
-let g:ale_set_highlights = 1
-let g:ale_completion_enabled = 1
-let g:airline#extensions#ale#enabled = 1
 "let g:ale_set_loclist = 0
 "let g:ale_set_quickfix = 1
 nmap <F8> <Plug>(ale_fix)
-"let g:ale_echo_cursor = 1
-"let g:ale_echo_msg_error_str = 'Error'
-"let g:ale_echo_msg_format = '%code: %%s'
-"let g:ale_echo_msg_warning_str = 'Warning'
-"let g:ale_keep_list_window_open = 0
-"let g:ale_lint_delay = 200
-"let g:ale_lint_on_enter = 1
-"let g:ale_lint_on_save = 1
-"let g:ale_lint_on_text_changed = 'always'
-"let g:ale_open_list = 0
-"let g:ale_set_highlights = 1
-"let g:ale_set_loclist = 1
-"let g:ale_set_quickfix = 0
-"let g:ale_set_signs = 1
-"let g:ale_sign_column_always = 0
-"let g:ale_sign_error = '>>'
-"let g:ale_sign_offset = 1000000
-"let g:ale_sign_warning = '--'
-"let g:ale_statusline_format = ['%d error(s)', '%d warning(s)', 'OK']
-"let g:ale_warn_about_trailing_whitespace = 1
