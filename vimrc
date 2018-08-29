@@ -33,6 +33,8 @@ Plugin 'w0rp/ale'          " Asynchronous Lint Engine
 Plugin 'maralla/completor.vim' " Заканчиватель
 Plugin 'powerman/vim-plugin-ruscmd' " Команды на русском языке
 Plugin 'vim-pandoc/vim-pandoc-syntax' " Удобная подсветка для markdown
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-easytags'
 
 call vundle#end()                    " required
 filetype on
@@ -41,11 +43,16 @@ filetype plugin indent on
 " Разбор vimrc в других папках
 set exrc
 set secure
-
 " Macros
 " let @b = "Ili**A**"
 " Don't redraw while executing macros(good performance config)
 set lazyredraw
+
+function! GotoDefinition()
+  let n = search("\\<".expand("<cword>")."\\>[^(]*([^)]*)\\s*\\n*\\s*{")
+endfunction
+map <F4> :call GotoDefinition()<CR>
+imap <F4> <c-o>:call GotoDefinition()<CR>
 
 set cursorline
 set hidden
@@ -201,30 +208,29 @@ map <C-q> :bd<CR>
 "++ Syntastic-Settings
 ""================================================
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 0
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_python_checkers = ['pylint']
-
 
 " Testing
 
 let g:ale_enabled = 1
 let g:ale_fix_on_save = 1
 let b:ale_linters = {
-                        \ 'python': ['flake8', 'pylint'],
+                        \ 'python': ['pylint'],
                         \'sh': ['shellcheck']
                         \}
 
 "let b:ale_linters = 'all'
 let g:ale_fixers = {
                         \ 'python' :['autopep8', 'yapf'],
-                        \  'sh': 'shfmt'
+                        \  'sh': 'shfmt',
+                        \  'c': 'clang-format',
+                        \  'cpp': 'clang-format'
                         \}
+let g:ale_sh_shfmt_executable= 'shfmt'
+let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлени
+"файл ставить пробел
+let g:ale_c_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, BreakBeforeBraces: Linux, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
+let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, BreakBeforeBraces: Linux, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
+"let g:ale_c_clangformat_options = '-style=Google'
 let g:ale_set_highlights = 1
 let g:ale_completion_enabled = 1
 let g:airline#extensions#ale#enabled = 1
