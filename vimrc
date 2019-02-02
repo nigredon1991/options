@@ -48,12 +48,6 @@ set secure
 " Don't redraw while executing macros(good performance config)
 set lazyredraw
 
-function! GotoDefinition()
-  let n = search("\\<".expand("<cword>")."\\>[^(]*([^)]*)\\s*\\n*\\s*{")
-endfunction
-map <F4> :call GotoDefinition()<CR>
-imap <F4> <c-o>:call GotoDefinition()<CR>
-
 set cursorline
 set hidden
 set nofoldenable
