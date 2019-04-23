@@ -5,38 +5,55 @@ filetype off                  " required
 " Vundle settings
 "== == == == == == == == == == == == == == == == == == == == == == == == == == =
 " set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+"
+call plug#begin('~/.vim/plugged')
+"set rtp+=~/.vim/bundle/Vundle.vim
+"call vundle#begin()
 " '. - последняя редактируемая строка для файла
 " ctrl + o - назад положение курсора во всех файлах
 " =G - из начала файла - запустить autoindent
 " :w !sudo dd of=% - запись через sudo
 
-Plugin 'gmarik/Vundle.vim'        " let Vundle manage Vundle, required
+"Plug 'gmarik/Vundle.vim'        " let Vundle manage Vundle, required
 
-"-------- -= == Code/project navigation == =-------------
-Plugin 'scrooloose/nerdtree'             " Project and file navigation
-Plugin 'tpope/vim-commentary'           " My commentary Fast comment - gc in visual mode
+"------ -= == Code/project navigation == =-------------
+Plug 'scrooloose/nerdtree'             " Project and file navigation
+Plug 'tpope/vim-commentary'           " My commentary Fast comment - gc in visual mode
+Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Need for vebugger
+Plug 'idanarye/vim-vebugger'
+"--------------- -= == Other == =----------------------
+Plug 'vim-airline/vim-airline'               " Lean & mean status/tabline for vim
+"Plun 'fisadev/FixedTaskList.vim'      " Pending tasks list
+"Plun 'rosenfeld/conque-term'          " Consoles as buffers
+Plug 'tpope/vim-surround'           " ysiw] - заковычить слово, cst} - изменить на скобки, ds} - удалить ковычки
+Plug 'tpope/vim-repeat'
+Plug 'vim-airline/vim-airline-themes'
 
-"----------------- -= == Other == =----------------------
-Plugin 'vim-airline/vim-airline'               " Lean & mean status/tabline for vim
-"Plugin 'fisadev/FixedTaskList.vim'      " Pending tasks list
-"Plugin 'rosenfeld/conque-term'          " Consoles as buffers
-Plugin 'tpope/vim-surround'           " ysiw] - заковычить слово, cst} - изменить на скобки, ds} - удалить ковычки
-Plugin 'tpope/vim-repeat'
-Plugin 'vim-airline/vim-airline-themes'
+"- ----------- -= == Languages support == =-------------
+" --Python - --
+Plug 'plytophogy/vim-virtualenv'
+Plug 'w0rp/ale'          " Asynchronous Lint Engine
+Plug 'maralla/completor.vim' " Заканчиватель
+Plug 'powerman/vim-plugin-ruscmd' " Команды на русском языке
+Plug 'vim-pandoc/vim-pandoc-syntax' " Удобная подсветка для markdown
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-easytags'
 
-"- ------------- -= == Languages support == =-------------
-" --- Python - --
-"Plugin 'scrooloose/syntastic'
-Plugin 'w0rp/ale'          " Asynchronous Lint Engine
-Plugin 'maralla/completor.vim' " Заканчиватель
-Plugin 'powerman/vim-plugin-ruscmd' " Команды на русском языке
-Plugin 'vim-pandoc/vim-pandoc-syntax' " Удобная подсветка для markdown
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-easytags'
+"Plug 'autozimu/LanguageClient-neovim', {
+"    \ 'branch': 'next',
+"    \ 'do': 'bash install.sh',
+"    \ }
 
-call vundle#end()                    " required
+" (Optional) Multi-entry selection UI.
+Plug 'junegunn/fzf'
+
+"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
+
+Plug 'davidhalter/jedi-vim'
+
+call plug#end()
+"call vundle#end()                    " required
 filetype on
 filetype plugin on
 filetype plugin indent on
@@ -52,11 +69,11 @@ set cursorline
 set hidden
 set nofoldenable
 set modelines=0
-"set clipboard = unnamedplus
-set clipboard=unnamed
+set clipboard+=unnamed
+"set clipboard=unnamed
 "set synmaxcol=128 "Ломает подсветку синтаксиса в php после слишком длинной
 "строки"
-set ttyscroll=10
+"set ttyscroll=10
 set encoding=utf-8
 set nowrap
 set number
@@ -94,7 +111,7 @@ set gcr=a:blinkon0
 if has("gui_running")
   set cursorline
   endif
-  set ttyfast
+set ttyfast
 "
 " включить подсветку кода
 syntax on
@@ -117,6 +134,7 @@ map <C-j> <C-w><Down>
 map <C-l> <C-w><Right>
 map <C-h> <C-w><Left>
 nnoremap <silent> <bs> <C-w><Left>
+
 " Search for selected text.
 " http://vim.wikia.com/wiki/VimTip171
 let s:save_cpo = &cpo | set cpo&vim
@@ -187,16 +205,6 @@ set laststatus=2
 " NerdTree настройки
 " показать NERDTree на F3
 map <F3> :NERDTreeToggle<CR>
-"игноррируемые файлы с расширениями
-"let NERDTreeIgnore=['\~$', '\.pyc$', '\.pyo$', '\.class$','pip-log\.txt$', '\.o$']
-
-" TaskList настройки
-"map <F2> :TaskList<CR>
-" отобразить список тасковна F2
-
-" Работа буфферами
-map <C-q> :bd<CR>
-" CTRL+Q - закрыть текущий буффер
 
 "==================================================
 "++ Syntastic-Settings
@@ -204,30 +212,70 @@ map <C-q> :bd<CR>
 set statusline+=%#warningmsg#
 
 " Testing
+" Jedi
+"let g:jedi#use_tabs_not_buffers = 1
+"let g:jedi#goto_command = "<leader>d"
+"let g:jedi#goto_assignments_command = "<leader>g"
+"let g:jedi#goto_definitions_command = ""
+"let g:jedi#documentation_command = "K"
+"let g:jedi#usages_command = "<leader>n"
+"let g:jedi#completions_command = "<C-Space>"
+"let g:jedi#rename_command = "<leader>r"
+"let g:jedi#completions_enabled = 1
 
 let g:ale_enabled = 1
 let g:ale_fix_on_save = 1
+let b:ale_linters = {
+                     \'sh': ['shellcheck'],
+                     \ 'c': ['clang'],
+                     \ 'cpp': ['clang'],
+                     \}
+"                      \ 'python': ['pylint','pyls'],
+
+let g:ale_fixers = {
+                     \ 'python' :['black'],
+                     \  'sh': [ 'shfmt'],
+                     \ 'c': ['clang-format'],
+                     \ 'cpp': ['clang-format'],
+                     \}
+let g:ale_sh_shfmt_executable= 'shfmt'
+let g:ale_python_black_executable= 'black'
+let g:ale_python_black_options= '-l 80'
+let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлени в файл ставить пробел
+let g:ale_c_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always,  AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
+let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
+"let g:ale_c_clangformat_options = '-style=Google'
 let g:ale_set_highlights = 1
 let g:ale_completion_enabled = 1
 let g:airline#extensions#ale#enabled = 1
-let b:ale_linters = {
-                        \ 'python': ['pylint'],
-                        \'sh': ['shellcheck']
-                        \}
-
-"let b:ale_linters = 'all'
-let g:ale_fixers = {
-                        \ 'python' :['autopep8', 'yapf'],
-                        \  'sh': 'shfmt',
-                        \  'c': 'clang-format',
-                        \  'cpp': 'clang-format'
-                        \}
-let g:ale_sh_shfmt_executable= 'shfmt'
-let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлени
-"файл ставить пробел
-let g:ale_c_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, BreakBeforeBraces: Linux, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
-let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, BreakBeforeBraces: Linux, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
-"let g:ale_c_clangformat_options = '-style=Google'
 "let g:ale_set_loclist = 0
 "let g:ale_set_quickfix = 1
 nmap <F8> <Plug>(ale_fix)
+"nmap <F2> <Plug>(ale_go_to_definition<CR>)
+let g:easytags_whitelist = ['reps']
+
+" ============ LanguageServer ============================
+" " Use `gq` in visual to format this
+set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
+function LC_maps()
+if has_key(g:LanguageClient_serverCommands, &filetype)
+        let g:ale_enabled = 0
+        nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
+        nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
+        nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+        nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+        nnoremap <silent> <F8> :call LanguageClient#textDocument_formatting()()<CR>
+endif
+endfunction
+
+"    autocmd FileType c,cpp call LC_maps()
+
+ let g:LanguageClient_serverCommands = {
+     \ 'c': ['clangd'],
+     \ 'cpp': ['clangd'],
+     \ }
+let g:LanguageClient_autoStart = 1
+
+tnoremap <Esc> <C-\><C-n>
+" ============ LanguageServer ============================
+" ============ END ============================
