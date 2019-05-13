@@ -1,21 +1,10 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-"== == == == == == == == == == == == == == == == == == == == == == == == == == =
-" Vundle settings
-"== == == == == == == == == == == == == == == == == == == == == == == == == == =
-" set the runtime path to include Vundle and initialize
-"
 call plug#begin('~/.vim/plugged')
-"set rtp+=~/.vim/bundle/Vundle.vim
-"call vundle#begin()
-" '. - последняя редактируемая строка для файла
-" ctrl + o - назад положение курсора во всех файлах
-" =G - из начала файла - запустить autoindent
-" :w !sudo dd of=% - запись через sudo
-
-"Plug 'gmarik/Vundle.vim'        " let Vundle manage Vundle, required
-
+" Менеджер плагинов
+" https://github.com/junegunn/vim-plug
+"
 "------ -= == Code/project navigation == =-------------
 Plug 'scrooloose/nerdtree'             " Project and file navigation
 Plug 'tpope/vim-commentary'           " My commentary Fast comment - gc in visual mode
@@ -46,22 +35,16 @@ Plug 'xolox/vim-easytags'
 
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
-
-"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-
-
 Plug 'davidhalter/jedi-vim'
 
 call plug#end()
 "call vundle#end()                    " required
-filetype on
 filetype plugin on
 filetype plugin indent on
 " Разбор vimrc в других папках
 set exrc
 set secure
 " Macros
-" let @b = "Ili**A**"
 " Don't redraw while executing macros(good performance config)
 set lazyredraw
 
@@ -73,15 +56,12 @@ set clipboard+=unnamed
 "set clipboard=unnamed
 "set synmaxcol=128 "Ломает подсветку синтаксиса в php после слишком длинной
 "строки"
-"set ttyscroll=10
 set encoding=utf-8
 set nowrap
 set number
 set hlsearch
 set ignorecase
 set smartcase
-
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
 set nobackup
 set nowb
 set noswapfile
@@ -89,31 +69,21 @@ set noswapfile
 set autoindent
 set tabstop=4
 set expandtab
-" set noexpandtab
-
 set splitbelow
-"set background = dark
 set cmdheight=2
 set t_Co=256
 colorscheme smyck
-"
-"
-" """"""""""""""""""""""""""""""""""""""""""""""""""""""
-
 set backspace=indent,eol,start
 aunmenu Help.
 aunmenu Window.
-"let no_buffers_menu=1
 set mousemodel=popup
 set ruler
 set completeopt-=preview
 set gcr=a:blinkon0
 if has("gui_running")
   set cursorline
-  endif
+endif
 set ttyfast
-"
-" включить подсветку кода
 syntax on
 set showcmd
 
@@ -121,12 +91,12 @@ set showcmd
 set switchbuf=useopen
 
 set visualbell
-set enc=utf-8     " utf-8 по дефолту в фаÐ¹лах
-set ls=2             " всегда показываем статусбар
-set incsearch     " инкреминтируемый поиск
-set hlsearch     " подсветка результатов поиска
-set nu             " показывать номера строк
-set scrolloff=5     " 5 строк при скролле за раз
+set enc=utf-8
+set ls=2
+set incsearch
+set hlsearch
+set nu
+set scrolloff=5
 
 " Map ctrl-movement keys to window switching
 map <C-k> <C-w><Up>
@@ -171,18 +141,6 @@ if !hasmapto("<Plug>VLToggle")
 endif
 let &cpo = s:save_cpo | unlet s:save_cpo
 
-" отключаем бэкапы и своп-файлы
-"set nobackup          " no backup files
-"set nowritebackup    " only in case you don't want a backup file while editing
-set noswapfile          " no swap files
-
-" прячем панельки
-"set guioptions-=m   " меню
-"set guioptions-=T    " тулбар
-"set guioptions-=r   "  скроллбары
-
-"  при переходе за границу в 80 символов в Ruby/Python/js/C/C++ подсвечиваем
-"  на темном фоне текст
 augroup vimrc_autocmds
     autocmd!
     autocmd FileType ruby,python,javascript,php highlight Excess ctermbg=DarkGrey guibg=Black
@@ -192,9 +150,6 @@ augroup vimrc_autocmds
     autocmd FileType md,markdown setlocal syntax=mkd filetype=markdown.pandoc shiftwidth=4 softtabstop=4
 
 augroup END
-
-" указываем каталог с настройками SnipMate
-let g:snippets_dir = "~/.vim/vim-snippets/snippets"
 
 " настройки Vim-Airline
 set laststatus=2
