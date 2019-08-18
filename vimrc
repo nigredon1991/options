@@ -104,6 +104,8 @@ map <C-j> <C-w><Down>
 map <C-l> <C-w><Right>
 map <C-h> <C-w><Left>
 nnoremap <silent> <bs> <C-w><Left>
+nnoremap s "_d
+"  Delete to null, not unnamed register
 
 " Search for selected text.
 " http://vim.wikia.com/wiki/VimTip171
