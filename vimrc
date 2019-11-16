@@ -73,6 +73,9 @@ set splitbelow
 set cmdheight=2
 set t_Co=256
 colorscheme smyck
+
+set grepprg=grep\ -Irn\ $*\ /dev/null
+
 set backspace=indent,eol,start
 aunmenu Help.
 aunmenu Window.
