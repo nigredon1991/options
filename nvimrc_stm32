@@ -1,4 +1,4 @@
-set path+=$HOME/reps/stm32_beginning/stm32f103c8t6/libopencm3/include/
+set path+=$HOME/reps/stm32f103c8t6/libopencm3/include/
 set path+=./rtos/
 let g:ale_c_gcc_executable= 'arm-none-eabi-gcc'
 let b:ale_linters = {
