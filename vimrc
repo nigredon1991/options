@@ -3,6 +3,8 @@ scriptencoding utf-8
 "set nocompatible              " be iMproved, required
 filetype off                  " required
 
+" Next time pip update
+" pip install neovim black wemake-python-styleguide
 "== == == == == == == == == == == == == == == == == == == == == == == == == == =
 " Vundle settings
 "== == == == == == == == == == == == == == == == == == == == == == == == == == =
@@ -27,6 +29,7 @@ Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Need for vebugger
 Plug 'idanarye/vim-vebugger'
 "--------------- -= == Other == =----------------------
 Plug 'vim-airline/vim-airline'               " Lean & mean status/tabline for vim
+Plug 'majutsushi/tagbar'
 "Plun 'fisadev/FixedTaskList.vim'      " Pending tasks list
 "Plun 'rosenfeld/conque-term'          " Consoles as buffers
 Plug 'tpope/vim-surround'           " ysiw] - заковычить слово, cst} - изменить на скобки, ds} - удалить ковычки
@@ -43,8 +46,20 @@ Plug 'powerman/vim-plugin-ruscmd' " Команды на русском язык�
 Plug 'vim-pandoc/vim-pandoc-syntax' " Удобная подсветка для markdown
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
+Plug 'martinda/Jenkinsfile-vim-syntax'
+Plug 'sheerun/vim-polyglot'
 let g:easytags_syntax_keyword = 'always'
 let g:easytags_async = 1
+let g:easytags_auto_highlight = 0
+
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
 
 "Plug 'autozimu/LanguageClient-neovim', {
 "    \ 'branch': 'next',
@@ -52,7 +67,7 @@ let g:easytags_async = 1
 "    \ }
 
 " (Optional) Multi-entry selection UI.
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
@@ -71,6 +86,8 @@ set secure
 " let @b = "Ili**A**"
 " Don't redraw while executing macros(good performance config)
 set lazyredraw
+set undofile
+set undodir=~/.vim/undo
 
 set cursorline
 set hidden
@@ -96,7 +113,7 @@ set tabstop=4
 set expandtab
 " set noexpandtab
 
-" set splitbelow
+set splitbelow
 set splitright
 "set background = dark
 set cmdheight=2
@@ -202,14 +219,23 @@ augroup vimrc_autocmds
     autocmd FileType c,cpp  setlocal expandtab shiftwidth=2 softtabstop=2
     autocmd FileType md,markdown setlocal syntax=mkd filetype=markdown.pandoc shiftwidth=4 softtabstop=4
     autocmd FileType yaml setlocal shiftwidth=1 softtabstop=1
+    autocmd FileType Jenkinsfile setlocal shiftwidth=4 softtabstop=4
 
 augroup END
 
 " настройки Vim-Airline
 set laststatus=2
+
+nnoremap <F4> :!scp %:p example_server.lala:%:p <CR>
 "let g:airline_powerline_fonts = 1
 "let g:airline#extensions#tabline#enabled = 1
 "let g:airline#extensions#tabline#formatter = 'unique_tail'
+nmap <F5> :TagbarToggle<CR>
+" let g:airline#extensions#tabline#enabled = 1
+
+" let g:airline_powerline_fonts = 1
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 " NerdTree настройки
 " показать NERDTree на F3
@@ -236,7 +262,7 @@ let g:ale_enabled = 1
 let g:ale_fix_on_save = 0
 let b:ale_linters = {
                      \'sh': ['shellcheck'],
-                     \ 'python': ['pylint'],
+                     \ 'python': ['pylint', 'flake8'],
                      \ 'c': ['cppcheck'],
                      \ 'cpp': ['cppcheck'],
                      \}
@@ -255,6 +281,7 @@ let g:ale_c_cppcheck_options= '-v --enable=style -DDAN_NEVER="" -DDAN_FREQUENT="
 let g:ale_sh_shfmt_executable= 'shfmt'
 let g:ale_python_black_executable= 'black'
 let g:ale_python_black_options= '-l 100'
+let g:ale_python_flake8_options= '--ignore=Q000,T001,C101,S303,WPS110,WPS335,D100,D104,D401,W504,RST303,RST304,DAR103,DAR203,D101,D103,D412,E800 --max-line-length=100 --no-isort-config'
 let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлени в файл ставить пробел
 let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google}"'
 let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
@@ -294,7 +321,7 @@ let g:easytags_whitelist = ['reps']
 
 " ============ CSCOPE ============================
 function! UpdateCscopeDb()
-    let extensions = ['*.cpp', '*.h', '*.hpp', '*.inl', '*.c', '*.java']
+    let extensions = ['"*.cpp"', '"*.h"', '"*.hpp"', '"*.inl"', '"*.c"', '"*.java"']
     let update_file_list = 'find . -name ' . join(extensions, ' -o -name ') . ' > ./cscope.files'
     echo update_file_list
     echo system(update_file_list)
