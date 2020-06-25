@@ -29,7 +29,7 @@ Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Need for vebugger
 Plug 'idanarye/vim-vebugger'
 "--------------- -= == Other == =----------------------
 Plug 'vim-airline/vim-airline'               " Lean & mean status/tabline for vim
-Plug 'majutsushi/tagbar'
+" Plug 'majutsushi/tagbar'
 "Plun 'fisadev/FixedTaskList.vim'      " Pending tasks list
 "Plun 'rosenfeld/conque-term'          " Consoles as buffers
 Plug 'tpope/vim-surround'           " ysiw] - заковычить слово, cst} - изменить на скобки, ds} - удалить ковычки
@@ -51,15 +51,17 @@ Plug 'sheerun/vim-polyglot'
 let g:easytags_syntax_keyword = 'always'
 let g:easytags_async = 1
 let g:easytags_auto_highlight = 0
+let g:easytags_dynamic_files = 1
 
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+Plug 'seeamkhan/robotframework-vim'
+Plug 'evedovelli/rst-robotframework-syntax-vim'
+Plug 'gu-fan/InstantRst'
+" Plug 'gu-fan/riv.vim'
+Plug 'nigredon1991/riv.vim'
+let g:riv_auto_format_table = 0
+" let g:separator_between_lines_in_table = ""
 
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
+Plug 'srstevenson/vim-picker'
 
 "Plug 'autozimu/LanguageClient-neovim', {
 "    \ 'branch': 'next',
@@ -73,6 +75,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 
 Plug 'davidhalter/jedi-vim'
+Plug 'junegunn/vim-easy-align'
 
 call plug#end()
 "call vundle#end()                    " required
@@ -220,6 +223,7 @@ augroup vimrc_autocmds
     autocmd FileType md,markdown setlocal syntax=mkd filetype=markdown.pandoc shiftwidth=4 softtabstop=4
     autocmd FileType yaml setlocal shiftwidth=1 softtabstop=1
     autocmd FileType Jenkinsfile setlocal shiftwidth=4 softtabstop=4
+    autocmd FileType vim setlocal shiftwidth=4 softtabstop=4
 
 augroup END
 
@@ -230,7 +234,7 @@ nnoremap <F4> :!scp %:p example_server.lala:%:p <CR>
 "let g:airline_powerline_fonts = 1
 "let g:airline#extensions#tabline#enabled = 1
 "let g:airline#extensions#tabline#formatter = 'unique_tail'
-nmap <F5> :TagbarToggle<CR>
+" nmap <F5> :TagbarToggle<CR>
 " let g:airline#extensions#tabline#enabled = 1
 
 " let g:airline_powerline_fonts = 1
@@ -281,7 +285,7 @@ let g:ale_c_cppcheck_options= '-v --enable=style -DDAN_NEVER="" -DDAN_FREQUENT="
 let g:ale_sh_shfmt_executable= 'shfmt'
 let g:ale_python_black_executable= 'black'
 let g:ale_python_black_options= '-l 100'
-let g:ale_python_flake8_options= '--ignore=Q000,T001,C101,S303,WPS110,WPS335,D100,D104,D401,W504,RST303,RST304,DAR103,DAR203,D101,D103,D412,E800 --max-line-length=100 --no-isort-config'
+let g:ale_python_flake8_options= '--ignore=Q000,T001,C101,S303,WPS110,WPS335,D100,D104,D401,W504,RST201,RST301,RST303,RST304,DAR103,DAR201,DAR203,D101,D103,D412,E800 --max-line-length=100 --no-isort-config'
 let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлени в файл ставить пробел
 let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google}"'
 let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
@@ -473,5 +477,58 @@ imap <F12> <esc>:call UpdateCscopeDb()<cr>
 
 " ============ CSCOPE END ============================
 
-" ============ LanguageServer ============================
+
+" TEST vimrc w0rp
+" --- ALE settings ---
+"
+" Disable ALE warnings about trailing whitespace.
+let g:ale_sign_error = '◉'
+let g:ale_sign_warning = '◉'
+highlight ALEErrorSign ctermfg=9 ctermbg=15 guifg=#C30500 guibg=#F5F5F5
+highlight ALEWarningSign ctermfg=11 ctermbg=15 guifg=#ED6237 guibg=#F5F5F5
+"let g:ale_warn_about_trailing_whitespace = 0
+let g:ale_maximum_file_size = 1024 * 1024
+let g:ale_completion_enabled = 1
+let g:ale_code_actions_enabled = 1
+let g:ale_set_balloons_legacy_echo = 1
+let g:ale_c_parse_compile_commands = 1
+
+" Options for different linters.
+let g:ale_python_mypy_ignore_invalid_syntax = 1
+let g:ale_python_mypy_options = '--incremental'
+"let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_text_changed = 1
+let g:ale_lint_on_insert_leave = 1
+let g:ale_linters_explicit = 1
+
+
+nmap <unique> <leader>pe <Plug>(PickerEdit)
+nmap <unique> <leader>ps <Plug>(PickerSplit)
+nmap <unique> <leader>pt <Plug>(PickerTabedit)
+nmap <unique> <leader>pv <Plug>(PickerVsplit)
+nmap <unique> <leader>pb <Plug>(PickerBuffer)
+nmap <unique> <leader>p] <Plug>(PickerTag)
+nmap <unique> <leader>pw <Plug>(PickerStag)
+nmap <unique> <leader>po <Plug>(PickerBufferTag)
+nmap <unique> <leader>ph <Plug>(PickerHelp)
+
+nmap ga <Plug>(EasyAlign)
+xmap ga <Plug>(EasyAlign)
+
+let g:polyglot_disabled = ['rst']
+
+let g:instant_rst_browser='opera'
+
+
+nnoremap ,doc :read $HOME/.vim/.skeleton.py<CR>A
+
+" Configure the `make` command to run RSpec
+set makeprg=make
+
+" NOW WE CAN:
+" - Run :make to run make
+" - :cl to list errors
+" - :cc# to jump to error by number
+" - :cn and :cp to navigate forward and back
 " ============ END ============================
+"
