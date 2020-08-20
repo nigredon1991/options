@@ -82,6 +82,7 @@ call plug#end()
 filetype on
 filetype plugin on
 filetype plugin indent on
+
 " Разбор vimrc в других папках
 set exrc
 set secure
@@ -325,7 +326,7 @@ let g:easytags_whitelist = ['reps']
 
 " ============ CSCOPE ============================
 function! UpdateCscopeDb()
-    let extensions = ['"*.cpp"', '"*.h"', '"*.hpp"', '"*.inl"', '"*.c"', '"*.java"']
+    let extensions = ['"*.cpp"', '"*.h"', '"*.hpp"', '"*.inl"', '"*.c"', '"*.java"', '"*.sh"', '"*.py"']
     let update_file_list = 'find . -name ' . join(extensions, ' -o -name ') . ' > ./cscope.files'
     echo update_file_list
     echo system(update_file_list)
@@ -515,7 +516,9 @@ nmap <unique> <leader>ph <Plug>(PickerHelp)
 nmap ga <Plug>(EasyAlign)
 xmap ga <Plug>(EasyAlign)
 
-let g:polyglot_disabled = ['rst']
+let g:polyglot_disabled = ['rst', 'json', 'template']
+
+au BufRead,BufNewFile *.template set syntax=off
 
 let g:instant_rst_browser='opera'
 
