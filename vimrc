@@ -73,6 +73,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
+Plug 'vimwiki/vimwiki'
 
 Plug 'davidhalter/jedi-vim'
 Plug 'junegunn/vim-easy-align'
@@ -286,7 +287,7 @@ let g:ale_c_cppcheck_options= '-v --enable=style -DDAN_NEVER="" -DDAN_FREQUENT="
 let g:ale_sh_shfmt_executable= 'shfmt'
 let g:ale_python_black_executable= 'black'
 let g:ale_python_black_options= '-l 100'
-let g:ale_python_flake8_options= '--ignore=Q000,T001,C101,S303,WPS110,WPS335,D100,D104,D401,W504,RST201,RST301,RST303,RST304,DAR103,DAR201,DAR203,D101,D103,D412,E800 --max-line-length=100 --no-isort-config'
+let g:ale_python_flake8_options= '--ignore=Q000,T001,C101,S303,WPS110,WPS305,WPS335,D100,D104,D401,W504,RST201,RST301,RST303,RST304,DAR103,DAR201,DAR203,D101,D103,D412,E800 --max-line-length=100 --no-isort-config'
 let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлени в файл ставить пробел
 let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google}"'
 let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
@@ -541,3 +542,18 @@ set makeprg=make
                        \ 'auto_generate_tags': 1}]
 " ============ END ============================
 "
+let g:netrw_banner = 0 "hide netrw top banner
+let g:netrw_list_hide = '.*\.swap$'  " Hide vim.swp files
+let g:netrw_liststyle = 3  " Change the directory view in netrw
+let g:netrw_browse_split = 4 " Open file on same windows vim
+let g:netrw_winsize = 20 " size of left window
+
+
+let g:vimwiki_list = [{
+            \'path': '/home/nglazov/reps/wiki/_posts/',
+            \'path_html': '/home/nglazov/reps/wiki/html',
+            \'syntax':'markdown',
+            \'ext':'md',
+            \'auto_tags':1,
+            \'auto_generate_tags': 1
+            \}]
