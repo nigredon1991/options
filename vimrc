@@ -524,6 +524,7 @@ let g:instant_rst_browser='opera'
 
 
 nnoremap ,doc :read $HOME/.vim/.skeleton.py<CR>A
+nnoremap ,wikit :read $HOME/reps/wiki/title.template<CR>A
 
 " Configure the `make` command to run RSpec
 set makeprg=make
@@ -533,5 +534,10 @@ set makeprg=make
 " - :cl to list errors
 " - :cc# to jump to error by number
 " - :cn and :cp to navigate forward and back
+  let g:vimwiki_list = [{'path': '~/reps/wiki/_posts/',
+                       \ 'syntax': 'markdown', 'ext': '.md',
+                       \ 'auto_tags': 1,
+                       \ 'auto_generate_links': 1,
+                       \ 'auto_generate_tags': 1}]
 " ============ END ============================
 "
