@@ -10,6 +10,25 @@ export PATH=$PATH:/home/"$USER"/.local/bin/
 export EDITOR=vim
 export HISTSIZE=10000
 export HISTTIMEFORMAT='%d/%m/%y %T '
+alias vim="nvim"
+alias telnet="kbdfix telnet"
+export HISTSIZE=10000
+export HISTTIMEFORMAT='%d/%m/%y %T '
+export PATH="$PATH":/home/nglazov/.local/bin/
+export PATH="$PATH":/home/nglazov/reps/stlink/build/Release/
+export PATH="$PATH":/var/lib/snapd/snap/bin/
+export PATH="$PATH":/home/nglazov/.gem/ruby/2.7.0/bin/
+export SHELLCHECK_OPTS="-e SC2155"
+alias ntop="nload"
+
+tl() {
+	while true; do
+		ping -c 1 -q "$1" && break
+		sleep 1
+	done
+	telnet "$1"
+}
+
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
@@ -88,7 +107,7 @@ if ${use_color} ; then
 	fi
 
 	alias ls='ls --color=auto'
-	alias grep='grep --exclude=tags --colour=auto'
+	alias grep='grep --exclude=tags --exclude=cscope.out --colour=auto'
 	alias egrep='egrep --exclude=tags --colour=auto'
 	alias fgrep='fgrep --exclude=tags --colour=auto'
 else
@@ -150,3 +169,8 @@ ex ()
   fi
 }
 
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+export PATH="$HOME/gems/bin:$PATH"
+
+. /etc/profile.d/vte.sh
