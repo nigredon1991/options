@@ -1,6 +1,4 @@
-set encoding=utf-8
 scriptencoding utf-8
-"set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " Next time pip update
@@ -20,6 +18,8 @@ call plug#begin('~/.vim/plugged')
 
 "Plug 'gmarik/Vundle.vim'        " let Vundle manage Vundle, required
 
+"------ -= == Code/project navigation == =-------------
+Plug 'vifm/vifm.vim'
 Plug 'junegunn/vader.vim'
 
 "------ -= == Code/project navigation == =-------------
@@ -62,6 +62,7 @@ let g:riv_auto_format_table = 0
 " let g:separator_between_lines_in_table = ""
 
 Plug 'srstevenson/vim-picker'
+"Plug 'michaeljsmith/vim-indent-object'
 
 "Plug 'autozimu/LanguageClient-neovim', {
 "    \ 'branch': 'next',
@@ -83,7 +84,6 @@ call plug#end()
 filetype on
 filetype plugin on
 filetype plugin indent on
-
 " Разбор vimrc в других папках
 set exrc
 set secure
@@ -103,6 +103,7 @@ set clipboard=unnamed
 "set synmaxcol=128 "Ломает подсветку синтаксиса в php после слишком длинной
 "строки"
 "set ttyscroll=10
+set encoding=utf-8
 set nowrap
 set number
 set hlsearch
@@ -111,6 +112,8 @@ set smartcase
 set wildmenu
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
 set noswapfile
 
 set autoindent
@@ -125,6 +128,8 @@ set cmdheight=2
 set t_Co=256
 colorscheme smyck
 "
+"
+" """"""""""""""""""""""""""""""""""""""""""""""""""""""
 set grepprg=grep\ -Irn\ $*\ /dev/null
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -149,7 +154,8 @@ set showcmd
 set switchbuf=useopen
 
 set visualbell
-set laststatus=2             " всегда показываем статусбар
+set enc=utf-8     " utf-8 по дефолту в фаÐ¹лах
+set ls=2             " всегда показываем статусбар
 set incsearch     " инкреминтируемый поиск
 set hlsearch     " подсветка результатов поиска
 set number             " показывать номера строк
@@ -197,7 +203,7 @@ vnoremap <silent> # :<C-U>call <SID>VSetSearch('?')<CR>?<C-R>/<CR>
 vmap <kMultiply> *
 nmap <silent> <Plug>VLToggle :let g:VeryLiteral = !g:VeryLiteral
   \\| echo "VeryLiteral " . (g:VeryLiteral ? "On" : "Off")<CR>
-if !hasmapto('<Plug>VLToggle')
+if !hasmapto("<Plug>VLToggle")
   nmap <unique> <Leader>vl <Plug>VLToggle
 endif
 let &cpoptions = s:save_cpo | unlet s:save_cpo
@@ -231,12 +237,7 @@ augroup END
 
 " настройки Vim-Airline
 set laststatus=2
-
 nnoremap <F4> :!scp %:p example_server.lala:%:p <CR>
-"let g:airline_powerline_fonts = 1
-"let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#tabline#formatter = 'unique_tail'
-" nmap <F5> :TagbarToggle<CR>
 " let g:airline#extensions#tabline#enabled = 1
 
 " let g:airline_powerline_fonts = 1
@@ -245,7 +246,7 @@ nnoremap <F4> :!scp %:p example_server.lala:%:p <CR>
 
 " NerdTree настройки
 " показать NERDTree на F3
-map <F3> :NERDTreeToggle<CR>
+" map <F3> :NERDTreeToggle<CR>
 
 "==================================================
 "++ Syntastic-Settings
@@ -342,7 +343,20 @@ if has('cscope')
 
     " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
     set cscopetag
+tnoremap <Esc> <C-\><C-n>
+let g:easytags_syntax_keyword = 'always'
+"  при переходе за границу в 80 символов в Ruby/Python/js/C/C++ подсвечиваем
+"  на темном фоне текст
+augroup vimrc_autocmds
+    autocmd!
+    autocmd FileType ruby,python,javascript,php highlight Excess ctermbg=DarkGrey guibg=Black
+    autocmd FileType ruby,python,javascript,php match Excess /\%80v.*/
+    autocmd FileType ruby,python,javascript,php,vim setlocal expandtab shiftwidth=4 softtabstop=4
+    autocmd FileType python nnoremap <F8> :Black<CR>
+    autocmd FileType bash,sh,hook,c,cpp  setlocal noexpandtab shiftwidth=4 softtabstop=4
+    autocmd FileType md,markdown setlocal syntax=mkd filetype=markdown.pandoc shiftwidth=4 softtabstop=4
 
+augroup END
     " check cscope for definition of a symbol before checking ctags: set to 1
     " if you want the reverse search order.
     set cscopetagorder=0
@@ -528,6 +542,16 @@ nnoremap ,doc :read $HOME/.vim/.skeleton.py<CR>A
 nnoremap ,wikit :read $HOME/reps/wiki/title.template<CR>A
 
 " Configure the `make` command to run RSpec
+
+nnoremap ,wikit :read $HOME/reps/wiki/title.template<CR>jjj :put =strftime(\"%F %X %z\")<CR>kJ
+
+"============HEX============
+" Hex read
+nmap <Leader>hr :%!xxd<CR> :set filetype=xxd<CR>
+
+" Hex write
+nmap <Leader>hw :%!xxd -r<CR> :set binary<CR> :set filetype=<CR>
+
 set makeprg=make
 
 " NOW WE CAN:
@@ -547,13 +571,3 @@ let g:netrw_list_hide = '.*\.swap$'  " Hide vim.swp files
 let g:netrw_liststyle = 3  " Change the directory view in netrw
 let g:netrw_browse_split = 4 " Open file on same windows vim
 let g:netrw_winsize = 20 " size of left window
-
-
-let g:vimwiki_list = [{
-            \'path': '/home/nglazov/reps/wiki/_posts/',
-            \'path_html': '/home/nglazov/reps/wiki/html',
-            \'syntax':'markdown',
-            \'ext':'md',
-            \'auto_tags':1,
-            \'auto_generate_tags': 1
-            \}]
