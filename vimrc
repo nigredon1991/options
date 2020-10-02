@@ -1,3 +1,4 @@
+set nocompatible              " be iMproved, required
 scriptencoding utf-8
 filetype off                  " required
 
@@ -246,7 +247,7 @@ nnoremap <F4> :!scp %:p example_server.lala:%:p <CR>
 
 " NerdTree настройки
 " показать NERDTree на F3
-" map <F3> :NERDTreeToggle<CR>
+"map <F3> :NERDTreeToggle<CR>
 
 "==================================================
 "++ Syntastic-Settings
@@ -272,9 +273,14 @@ let b:ale_linters = {
                      \ 'python': ['pylint', 'flake8'],
                      \ 'c': ['cppcheck'],
                      \ 'cpp': ['cppcheck'],
+                     \ 'yaml': ['yamllint'],
                      \}
+                     "\ 'c': ['clang'],
+                     "\ 'cpp': ['clang'],
+                     " \ 'c': ['cppcheck'],
+                     " \ 'cpp': ['cppcheck'],
+                     " \ 'python': ['pyflakes'],
 "                      \ 'python': ['pylint','pyls'],
-                     "\ 'python': ['flake8'],
 
 let g:ale_fixers = {
                      \ 'python' :['black'],
@@ -287,10 +293,11 @@ let g:ale_c_cppcheck_executable= 'cppcheck'
 let g:ale_c_cppcheck_options= '-v --enable=style -DDAN_NEVER="" -DDAN_FREQUENT=""'
 let g:ale_sh_shfmt_executable= 'shfmt'
 let g:ale_python_black_executable= 'black'
-let g:ale_python_black_options= '-l 100'
+let g:ale_python_black_options= '-l 80'
 let g:ale_python_flake8_options= '--ignore=Q000,T001,C101,S303,WPS110,WPS305,WPS335,D100,D104,D401,W504,RST201,RST301,RST303,RST304,DAR103,DAR201,DAR203,D101,D103,D412,E800 --max-line-length=100 --no-isort-config'
 let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлени в файл ставить пробел
-let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google}"'
+"let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google}"'
+let g:ale_c_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always,  AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
 let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
 "let g:ale_c_clangformat_options = '-style=Google'
 let g:ale_set_highlights = 1
@@ -539,11 +546,9 @@ let g:instant_rst_browser='opera'
 
 
 nnoremap ,doc :read $HOME/.vim/.skeleton.py<CR>A
-nnoremap ,wikit :read $HOME/reps/wiki/title.template<CR>A
-
-" Configure the `make` command to run RSpec
 
 nnoremap ,wikit :read $HOME/reps/wiki/title.template<CR>jjj :put =strftime(\"%F %X %z\")<CR>kJ
+nnoremap ,wiknew :put =strftime(\"%F-\")<CR>kJA
 
 "============HEX============
 " Hex read
