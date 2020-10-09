@@ -16,6 +16,7 @@ call plug#begin('~/.vim/plugged')
 " ctrl + o - назад положение курсора во всех файлах
 " =G - из начала файла - запустить autoindent
 " :w !sudo dd of=% - запись через sudo
+" /\%Vpattern - поиск в последнем выделении
 
 "Plug 'gmarik/Vundle.vim'        " let Vundle manage Vundle, required
 
