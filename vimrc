@@ -3,7 +3,7 @@ scriptencoding utf-8
 filetype off                  " required
 
 " Next time pip update
-" pip install neovim black wemake-python-styleguide
+" pip install neovim black wemake-python-styleguide pylint  mypy
 "== == == == == == == == == == == == == == == == == == == == == == == == == == =
 " Vundle settings
 "== == == == == == == == == == == == == == == == == == == == == == == == == == =

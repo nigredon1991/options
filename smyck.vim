@@ -37,7 +37,7 @@ hi SpellCap             cterm=none ctermbg=4        ctermfg=15      gui=none    
 hi SpellRare            cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
 hi SpellLocal           cterm=none ctermbg=4        ctermfg=15      gui=none                        guifg=#F7F7F7
 hi Visual               cterm=none ctermbg=15       ctermfg=8       gui=none        guibg=#F7F7F7   guifg=#8F8F8F
-hi Directory            cterm=none ctermbg=none     ctermfg=12      gui=none        guibg=#242424   guifg=#88CCE7
+hi Directory            cterm=none ctermbg=none     ctermfg=63      gui=none        guibg=#242424   guifg=#88CCE7
 hi SpecialKey           cterm=none ctermbg=none     ctermfg=8       gui=none                        guifg=#8F8F8F
 hi DiffAdd              cterm=bold ctermbg=2        ctermfg=15
 hi DiffChange           cterm=bold ctermbg=4        ctermfg=15
@@ -54,12 +54,12 @@ hi Title                cterm=none ctermbg=none     ctermfg=2       gui=none    
 hi Keyword              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
 hi Comment              cterm=none ctermbg=none ctermfg=7           gui=none        guifg=#1F1F1F
 hi Delimiter            cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
-hi Identifier           cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
-hi Structure            cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#9DEEF2
+hi Identifier           cterm=none ctermbg=none ctermfg=63          gui=none        guifg=#96D9F1
+hi Structure            cterm=none ctermbg=none ctermfg=63          gui=none        guifg=#9DEEF2
 hi Ignore               cterm=none ctermbg=none ctermfg=8           gui=none        guifg=bg
-hi Constant             cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
+hi Constant             cterm=none ctermbg=none ctermfg=63          gui=none        guifg=#96D9F1
 hi PreProc              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
-hi Type                 cterm=none ctermbg=none ctermfg=12          gui=none        guifg=#96D9F1
+hi Type                 cterm=none ctermbg=none ctermfg=63          gui=none        guifg=#96D9F1
 hi Statement            cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
 hi Special              cterm=none ctermbg=none ctermfg=6           gui=none        guifg=#d7d7d7
 hi String               cterm=none ctermbg=none ctermfg=3           gui=none        guifg=#F6DC69
