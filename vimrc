@@ -1,3 +1,4 @@
+set encoding=utf-8
 set nocompatible              " be iMproved, required
 scriptencoding utf-8
 filetype off                  " required
@@ -9,6 +10,7 @@ filetype off                  " required
 "== == == == == == == == == == == == == == == == == == == == == == == == == == =
 " set the runtime path to include Vundle and initialize
 "
+let g:polyglot_disabled = ['rst', 'json', 'template']
 call plug#begin('~/.vim/plugged')
 "set rtp+=~/.vim/bundle/Vundle.vim
 "call vundle#begin()
@@ -20,12 +22,9 @@ call plug#begin('~/.vim/plugged')
 
 "Plug 'gmarik/Vundle.vim'        " let Vundle manage Vundle, required
 
-"------ -= == Code/project navigation == =-------------
-Plug 'vifm/vifm.vim'
 Plug 'junegunn/vader.vim'
 
 "------ -= == Code/project navigation == =-------------
-Plug 'scrooloose/nerdtree'             " Project and file navigation
 Plug 'tpope/vim-commentary'           " My commentary Fast comment - gc in visual mode
 Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Need for vebugger
 Plug 'idanarye/vim-vebugger'
@@ -78,14 +77,17 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 Plug 'vimwiki/vimwiki'
 
-Plug 'davidhalter/jedi-vim'
+" Plug 'davidhalter/jedi-vim'
 Plug 'junegunn/vim-easy-align'
+Plug 'sirver/ultisnips'
+
 
 call plug#end()
 "call vundle#end()                    " required
 filetype on
 filetype plugin on
 filetype plugin indent on
+
 " Разбор vimrc в других папках
 set exrc
 set secure
@@ -105,7 +107,6 @@ set clipboard=unnamed
 "set synmaxcol=128 "Ломает подсветку синтаксиса в php после слишком длинной
 "строки"
 "set ttyscroll=10
-set encoding=utf-8
 set nowrap
 set number
 set hlsearch
@@ -129,9 +130,6 @@ set splitright
 set cmdheight=2
 set t_Co=256
 colorscheme smyck
-"
-"
-" """"""""""""""""""""""""""""""""""""""""""""""""""""""
 set grepprg=grep\ -Irn\ $*\ /dev/null
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -156,8 +154,7 @@ set showcmd
 set switchbuf=useopen
 
 set visualbell
-set enc=utf-8     " utf-8 по дефолту в фаÐ¹лах
-set ls=2             " всегда показываем статусбар
+set laststatus=2             " всегда показываем статусбар
 set incsearch     " инкреминтируемый поиск
 set hlsearch     " подсветка результатов поиска
 set number             " показывать номера строк
@@ -166,6 +163,8 @@ set backupdir=/tmp/
 set directory=/tmp/
 set undodir=/tmp/
 
+set spelllang=en,ru
+
 " Map ctrl-movement keys to window switching
 map <C-k> <C-w><Up>
 map <C-j> <C-w><Down>
@@ -173,6 +172,99 @@ map <C-l> <C-w><Right>
 map <C-h> <C-w><Left>
 nnoremap <silent> <bs> <C-w><Left>
 tnoremap <C-\> <C-\><C-n>
+
+if has('nvim')
+    augroup TerminalStuff
+      autocmd TermOpen * setlocal nonumber norelativenumber
+      tnoremap <expr> <A-r> '<C-\><C-N>"'.nr2char(getchar()).'pi'
+    augroup END
+endif
+
+" Search within a scope (a {...} program block).
+" Version 2010-02-28 from http://vim.wikia.com/wiki/VimTip1530
+
+" Search within top-level block for word at cursor, or selected text.
+nnoremap <Leader>[ /<C-R>=<SID>ScopeSearch('[[', 1)<CR><CR>
+vnoremap <Leader>[ <Esc>/<C-R>=<SID>ScopeSearch('[[', 2)<CR><CR>gV
+" Search within current block for word at cursor, or selected text.
+nnoremap <Leader>{ /<C-R>=<SID>ScopeSearch('[{', 1)<CR><CR>
+vnoremap <Leader>{ <Esc>/<C-R>=<SID>ScopeSearch('[{', 2)<CR><CR>gV
+" Search within current top-level block for user-entered text.
+nnoremap <Leader>/ /<C-R>=<SID>ScopeSearch('[[', 0)<CR>
+vnoremap <Leader>/ <Esc>/<C-R>=<SID>ScopeSearch('[[', 2)<CR><CR>
+
+"==================================================
+"++ ALE-Settings
+""================================================
+set statusline+=%#warningmsg#
+
+let g:ale_enabled = 1
+let g:ale_fix_on_save = 0
+let g:ale_linters = {
+                     \'sh': ['shellcheck'],
+                     \ 'python': ['pylint', 'flake8', "mypy"],
+                     \ 'c': ['cppcheck', 'gcc'],
+                     \ 'cpp': ['cppcheck'],
+                     \ 'yaml': ['yamllint'],
+                     \ 'json': ['jsonlint'],
+                     \}
+
+let g:ale_fixers = {
+                     \ 'python' :['black'],
+                     \  'sh': [ 'shfmt'],
+                     \ 'c': ['clang-format'],
+                     \ 'cpp': ['clang-format'],
+                     \ 'json': ['jq'],
+                     \ 'racket': ['scmindent'],
+                     \}
+let g:ale_c_cppcheck_executable= 'cppcheck'
+let g:ale_c_cppcheck_options= '-v --enable=style -DDAN_NEVER="" -DDAN_FREQUENT=""'
+let g:ale_yaml_yamllint_options= '-c ~/.yamllintrc'
+let g:ale_sh_shfmt_executable= 'shfmt'
+let g:ale_python_black_executable= 'black'
+let g:ale_python_black_options= '-l 100'
+let g:ale_python_flake8_options= '--ignore=Q000,T001,C101,S303,WPS110,WPS305,WPS221,WPS335,D100,D104,D401,W504,RST201,RST301,RST303,RST304,D101,D103,D412,E800,S101,WPS111 --max-line-length=100 --no-isort-config'
+let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлени в файл ставить пробел
+let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google}"'
+let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
+"let g:ale_c_clangformat_options = '-style=Google'
+let g:ale_set_highlights = 1
+let g:ale_completion_enabled = 1
+let g:airline#extensions#ale#enabled = 1
+"let g:ale_set_loclist = 0
+"let g:ale_set_quickfix = 1
+nmap <F8> <Plug>(ale_fix)
+" write with sudo
+cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+
+" Return a pattern to search within a specified scope, or
+" return a backslash to cancel search if scope not found.
+" navigator: a command to jump to the beginning of the desired scope
+" mode: 0=scope only; 1=scope+current word; 2=scope+visual selection
+function! s:ScopeSearch(navigator, mode)
+  if a:mode == 0
+    let pattern = ''
+  elseif a:mode == 1
+    let pattern = '\<' . expand('<cword>') . '\>'
+  else
+    let old_reg = getreg('@')
+    let old_regtype = getregtype('@')
+    normal! gvy
+    let pattern = escape(@@, '/\.*$^~[')
+    call setreg('@', old_reg, old_regtype)
+  endif
+  let saveview = winsaveview()
+  execute 'normal! ' . a:navigator
+  let first = line('.')
+  normal %
+  let last = line('.')
+  normal %
+  call winrestview(saveview)
+  if first < last
+    return printf('\%%>%dl\%%<%dl%s', first-1, last+1, pattern)
+  endif
+  return "\b"
+endfunction
 
 " Search for selected text.
 " http://vim.wikia.com/wiki/VimTip171
@@ -210,15 +302,6 @@ if !hasmapto("<Plug>VLToggle")
 endif
 let &cpoptions = s:save_cpo | unlet s:save_cpo
 
-" отключаем бэкапы и своп-файлы
-"set nobackup          " no backup files
-"set nowritebackup    " only in case you don't want a backup file while editing
-set noswapfile          " no swap files
-
-" прячем панельки
-"set guioptions-=m   " меню
-"set guioptions-=T    " тулбар
-"set guioptions-=r   "  скроллбары
 
 "  при переходе за границу в 80 символов в Ruby/Python/js/C/C++ подсвечиваем
 "  на темном фоне текст
@@ -227,112 +310,21 @@ augroup vimrc_autocmds
     autocmd FileType txt match Excess /\%100v.*/
     autocmd FileType ruby,python,javascript,php highlight Excess ctermbg=DarkGrey guibg=Black
     autocmd FileType ruby,python,javascript,php match Excess /\%100v.*/
-    autocmd FileType ruby,python,javascript,php setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=4
+    autocmd FileType ruby,python,javascript,php setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=4 foldmethod=indent
     autocmd FileType bash,sh,hook setlocal noexpandtab shiftwidth=4 softtabstop=4
     autocmd FileType c,cpp  setlocal expandtab shiftwidth=2 softtabstop=2
     autocmd FileType md,markdown setlocal syntax=mkd filetype=markdown.pandoc shiftwidth=4 softtabstop=4
-    autocmd FileType yaml setlocal shiftwidth=1 softtabstop=1
+    autocmd FileType yaml setlocal shiftwidth=1 softtabstop=1 foldmethod=indent
     autocmd FileType Jenkinsfile setlocal shiftwidth=4 softtabstop=4
     autocmd FileType vim setlocal shiftwidth=4 softtabstop=4
+    autocmd FileType racket setlocal shiftwidth=2 softtabstop=2 tabstop=4 foldmethod=indent
 
 augroup END
 
-" настройки Vim-Airline
-set laststatus=2
 nnoremap <F4> :!scp %:p example_server.lala:%:p <CR>
-" let g:airline#extensions#tabline#enabled = 1
 
-" let g:airline_powerline_fonts = 1
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#formatter = 'unique_tail'
 
-" NerdTree настройки
-" показать NERDTree на F3
-"map <F3> :NERDTreeToggle<CR>
-
-"==================================================
-"++ Syntastic-Settings
-""================================================
-set statusline+=%#warningmsg#
-
-" Testing
-" Jedi
-"let g:jedi#use_tabs_not_buffers = 1
-"let g:jedi#goto_command = "<leader>d"
-"let g:jedi#goto_assignments_command = "<leader>g"
-"let g:jedi#goto_definitions_command = ""
-"let g:jedi#documentation_command = "K"
-"let g:jedi#usages_command = "<leader>n"
-"let g:jedi#completions_command = "<C-Space>"
-"let g:jedi#rename_command = "<leader>r"
-"let g:jedi#completions_enabled = 1
-
-let g:ale_enabled = 1
-let g:ale_fix_on_save = 0
-let b:ale_linters = {
-                     \'sh': ['shellcheck'],
-                     \ 'python': ['pylint', 'flake8'],
-                     \ 'c': ['cppcheck'],
-                     \ 'cpp': ['cppcheck'],
-                     \ 'yaml': ['yamllint'],
-                     \}
-                     "\ 'c': ['clang'],
-                     "\ 'cpp': ['clang'],
-                     " \ 'c': ['cppcheck'],
-                     " \ 'cpp': ['cppcheck'],
-                     " \ 'python': ['pyflakes'],
-"                      \ 'python': ['pylint','pyls'],
-
-let g:ale_fixers = {
-                     \ 'python' :['black'],
-                     \  'sh': [ 'shfmt'],
-                     \ 'c': ['clang-format'],
-                     \ 'cpp': ['clang-format'],
-                     \ 'json': ['jq'],
-                     \}
-let g:ale_c_cppcheck_executable= 'cppcheck'
-let g:ale_c_cppcheck_options= '-v --enable=style -DDAN_NEVER="" -DDAN_FREQUENT=""'
-let g:ale_sh_shfmt_executable= 'shfmt'
-let g:ale_python_black_executable= 'black'
-let g:ale_python_black_options= '-l 80'
-let g:ale_python_flake8_options= '--ignore=Q000,T001,C101,S303,WPS110,WPS305,WPS335,D100,D104,D401,W504,RST201,RST301,RST303,RST304,DAR103,DAR201,DAR203,D101,D103,D412,E800 --max-line-length=100 --no-isort-config'
-let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлени в файл ставить пробел
-"let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google}"'
-let g:ale_c_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always,  AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
-let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}"'
-"let g:ale_c_clangformat_options = '-style=Google'
-let g:ale_set_highlights = 1
-let g:ale_completion_enabled = 1
-let g:airline#extensions#ale#enabled = 1
-"let g:ale_set_loclist = 0
-"let g:ale_set_quickfix = 1
-nmap <F8> <Plug>(ale_fix)
-"nmap <F2> <Plug>(ale_go_to_definition<CR>)
 let g:easytags_whitelist = ['reps']
-
-" ============ LanguageServer ============================
-" " Use `gq` in visual to format this
-" set formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
-" function LC_maps()
-" if has_key(g:LanguageClient_serverCommands, &filetype)
-"         let g:ale_enabled = 0
-"         nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<cr>
-"         nnoremap <buffer> <silent> gd :call LanguageClient#textDocument_definition()<CR>
-"         nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-"         nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
-"         nnoremap <silent> <F8> :call LanguageClient#textDocument_formatting()()<CR>
-" endif
-" endfunction
-
-" "    autocmd FileType c,cpp call LC_maps()
-
-"  let g:LanguageClient_serverCommands = {
-"      \ 'c': ['clangd'],
-"      \ 'cpp': ['clangd'],
-"      \ }
-" let g:LanguageClient_autoStart = 1
-
-" tnoremap <Esc> <C-\><C-n>
 
 " ============ CSCOPE ============================
 function! UpdateCscopeDb()
@@ -351,20 +343,6 @@ if has('cscope')
 
     " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
     set cscopetag
-tnoremap <Esc> <C-\><C-n>
-let g:easytags_syntax_keyword = 'always'
-"  при переходе за границу в 80 символов в Ruby/Python/js/C/C++ подсвечиваем
-"  на темном фоне текст
-augroup vimrc_autocmds
-    autocmd!
-    autocmd FileType ruby,python,javascript,php highlight Excess ctermbg=DarkGrey guibg=Black
-    autocmd FileType ruby,python,javascript,php match Excess /\%80v.*/
-    autocmd FileType ruby,python,javascript,php,vim setlocal expandtab shiftwidth=4 softtabstop=4
-    autocmd FileType python nnoremap <F8> :Black<CR>
-    autocmd FileType bash,sh,hook,c,cpp  setlocal noexpandtab shiftwidth=4 softtabstop=4
-    autocmd FileType md,markdown setlocal syntax=mkd filetype=markdown.pandoc shiftwidth=4 softtabstop=4
-
-augroup END
     " check cscope for definition of a symbol before checking ctags: set to 1
     " if you want the reverse search order.
     set cscopetagorder=0
@@ -536,10 +514,15 @@ nmap <unique> <leader>pw <Plug>(PickerStag)
 nmap <unique> <leader>po <Plug>(PickerBufferTag)
 nmap <unique> <leader>ph <Plug>(PickerHelp)
 
+" ga * | - for table
+" Align by regexp
+" :EasyAlign /[:;]+/
+" :EasyAlign |       " align by 1st `|`
+" :EasyAlign 3 |     " align by 3rd `|`
+" :EasyAlign * |     " align by all `|`s
 nmap ga <Plug>(EasyAlign)
 xmap ga <Plug>(EasyAlign)
 
-let g:polyglot_disabled = ['rst', 'json', 'template']
 
 au BufRead,BufNewFile *.template set syntax=off
 
@@ -548,6 +531,7 @@ let g:instant_rst_browser='opera'
 
 nnoremap ,doc :read $HOME/.vim/.skeleton.py<CR>A
 
+" Configure the `make` command to run RSpec
 nnoremap ,wikit :read $HOME/reps/wiki/title.template<CR>jjj :put =strftime(\"%F %X %z\")<CR>kJ
 nnoremap ,wiknew :put =strftime(\"%F-\")<CR>kJA
 
@@ -577,3 +561,6 @@ let g:netrw_list_hide = '.*\.swap$'  " Hide vim.swp files
 let g:netrw_liststyle = 3  " Change the directory view in netrw
 let g:netrw_browse_split = 4 " Open file on same windows vim
 let g:netrw_winsize = 20 " size of left window
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
