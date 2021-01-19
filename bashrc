@@ -7,10 +7,11 @@
 # better yaourt colors
 export YAOURT_COLORS="nb=1:pkg=1:ver=1;32:lver=1;45:installed=1;42:grp=1;34:od=1;41;5:votes=1;44:dsc=0:other=1;35"
 export PATH=$PATH:/home/"$USER"/.local/bin/
-export EDITOR=vim
+export EDITOR=nvim
 export HISTSIZE=10000
 export HISTTIMEFORMAT='%d/%m/%y %T '
 alias vim="nvim"
+alias vimdiff="nvim -d"
 alias telnet="kbdfix telnet"
 export HISTSIZE=10000
 export HISTTIMEFORMAT='%d/%m/%y %T '
@@ -18,8 +19,13 @@ export PATH="$PATH":/home/nglazov/.local/bin/
 export PATH="$PATH":/home/nglazov/reps/stlink/build/Release/
 export PATH="$PATH":/var/lib/snapd/snap/bin/
 export PATH="$PATH":/home/nglazov/.gem/ruby/2.7.0/bin/
-export SHELLCHECK_OPTS="-e SC2155"
+export SHELLCHECK_OPTS="-e SC2155 -e SC1091"
 alias ntop="nload"
+
+jenkinsfile_check(){
+	local jenkinsfile=${1:-Jenkinsfile}
+	curl --user user:pass -X POST -F 'jenkinsfile=<'"$jenkinsfile"'' http://$jenkins_url:8080/pipeline-model-converter/validate
+}
 
 tl() {
 	while true; do
@@ -107,9 +113,9 @@ if ${use_color} ; then
 	fi
 
 	alias ls='ls --color=auto'
-	alias grep='grep --exclude=tags --exclude=cscope.out --colour=auto'
-	alias egrep='egrep --exclude=tags --colour=auto'
-	alias fgrep='fgrep --exclude=tags --colour=auto'
+	alias grep='grep --exclude=cscope.files --exclude=tags --exclude=cscope.out --exclude-dir=venv --colour=auto --exclude-dir=.mypy_cache --exclude-dir=.git'
+	alias egrep='egrep --exclude=cscope.files --exclude-dir=venv --exclude=tags --colour=auto --exclude-dir=.mypy_cache --exclude-dir=.git'
+	alias fgrep='fgrep --exclude=cscope.files --exclude-dir=venv --exclude=tags --colour=auto --exclude-dir=.mypy_cache --exclude-dir=.git'
 else
 	if [[ ${EUID} == 0 ]] ; then
 		# show root@ when we don't have colors
