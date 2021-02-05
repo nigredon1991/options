@@ -80,6 +80,7 @@ Plug 'vimwiki/vimwiki'
 " Plug 'davidhalter/jedi-vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'sirver/ultisnips'
+Plug 'honza/vim-snippets'
 
 
 call plug#end()
@@ -109,7 +110,6 @@ set clipboard=unnamed
 "set ttyscroll=10
 set nowrap
 set number
-set hlsearch
 set ignorecase
 set smartcase
 set wildmenu
