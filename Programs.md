@@ -4,4 +4,5 @@
 * `https://github.com/universal-ctags/ctags` - улучшенные теги для всего
 * `go, pylint, shellckeck`
 * `clipman` - менеджер буферов
+* `https://github.com/chubin/cheat.sh` - много мануалов под рукой
 
