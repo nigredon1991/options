@@ -11,6 +11,8 @@ filetype off                  " required
 " set the runtime path to include Vundle and initialize
 "
 let g:polyglot_disabled = ['rst', 'json', 'template']
+let g:groovy_ignore_groovydoc=1 " in Jenkinsfile include javascript lang options, don't need this
+" let g:polyglot_disabled = ['rst', 'json', 'template', 'ftdetect']
 call plug#begin('~/.vim/plugged')
 "set rtp+=~/.vim/bundle/Vundle.vim
 "call vundle#begin()
@@ -49,13 +51,16 @@ Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
 Plug 'martinda/Jenkinsfile-vim-syntax'
 Plug 'sheerun/vim-polyglot'
+Plug 'dbeniamine/cheat.sh-vim'
+
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 let g:easytags_syntax_keyword = 'always'
 let g:easytags_async = 1
 let g:easytags_auto_highlight = 0
 let g:easytags_dynamic_files = 1
 
-Plug 'seeamkhan/robotframework-vim'
-Plug 'evedovelli/rst-robotframework-syntax-vim'
 Plug 'gu-fan/InstantRst'
 " Plug 'gu-fan/riv.vim'
 Plug 'nigredon1991/riv.vim'
@@ -72,6 +77,7 @@ Plug 'srstevenson/vim-picker'
 
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
@@ -81,6 +87,7 @@ Plug 'vimwiki/vimwiki'
 Plug 'junegunn/vim-easy-align'
 Plug 'sirver/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'will133/vim-dirdiff'
 
 
 call plug#end()
@@ -99,6 +106,7 @@ set lazyredraw
 set undofile
 set undodir=~/.vim/undo
 
+set maxmempattern=2000 " sometime need more memory
 set cursorline
 set hidden
 set nofoldenable
@@ -113,10 +121,11 @@ set number
 set ignorecase
 set smartcase
 set wildmenu
+set wildmode=list:longest
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
+set backup
+set writebackup
 set noswapfile
 
 set autoindent
@@ -140,6 +149,8 @@ aunmenu Window.
 set mousemodel=popup
 set ruler
 set completeopt-=preview
+set completeopt+=noinsert
+set completeopt+=noselect
 set guicursor=a:blinkon0
 if has('gui_running')
   set cursorline
@@ -180,6 +191,10 @@ if has('nvim')
     augroup END
 endif
 
+let mapleader = "\<Space>"
+
+nnoremap <Leader>+ :vertical resize +5<CR>
+nnoremap <Leader>- :vertical resize -5<CR>
 " Search within a scope (a {...} program block).
 " Version 2010-02-28 from http://vim.wikia.com/wiki/VimTip1530
 
@@ -203,7 +218,7 @@ let g:ale_fix_on_save = 0
 let g:ale_linters = {
                      \'sh': ['shellcheck'],
                      \ 'python': ['pylint', 'flake8', "mypy"],
-                     \ 'c': ['cppcheck', 'gcc'],
+                     \ 'c': ['cppcheck', 'cc'],
                      \ 'cpp': ['cppcheck'],
                      \ 'yaml': ['yamllint'],
                      \ 'json': ['jsonlint'],
@@ -398,14 +413,14 @@ if has('cscope')
     " go back to where you were before the search.
     "
 
-    nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+    nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
     nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-    nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
 
     " Using 'CTRL-spacebar' (intepreted as CTRL-@ by vim) then a search type
@@ -414,16 +429,25 @@ if has('cscope')
     "
     " (Note: earlier versions of vim may not have the :scs command, but it
     " can be simulated roughly via:
-    "    nmap <C-@>s <C-W><C-S> :cs find s <C-R>=expand("<cword>")<CR><CR>	
+    "    nmap <C-@>s <C-W><C-S> :cs find s <C-R>=expand("<cword>")<CR><CR>
 
-    nmap <C-Space>s :scs find s <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-Space>g :scs find g <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-Space>c :scs find c <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-Space>t :scs find t <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-Space>e :scs find e <C-R>=expand("<cword>")<CR><CR>	
-    nmap <C-Space>f :scs find f <C-R>=expand("<cfile>")<CR><CR>	
-    nmap <C-Space>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
-    nmap <C-Space>d :scs find d <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-Space>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-Space>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-Space>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-Space>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-Space>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-Space>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
+    nmap <C-Space>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+    nmap <C-Space>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
+
+    " nmap <C-Space>s :scs find s <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space>g :scs find g <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space>c :scs find c <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space>t :scs find t <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space>e :scs find e <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
+    " nmap <C-Space>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+    " nmap <C-Space>d :scs find d <C-R>=expand("<cword>")<CR><CR>
 
 
     " Hitting CTRL-space *twice* before the search type does a vertical
@@ -432,14 +456,14 @@ if has('cscope')
     " (Note: you may wish to put a 'set splitright' in your .vimrc
     " if you prefer the new window on the right instead of the left
 
-    nmap <C-Space><C-Space>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-Space><C-Space>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-Space><C-Space>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-Space><C-Space>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-Space><C-Space>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-Space><C-Space>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>	
-    nmap <C-Space><C-Space>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
-    nmap <C-Space><C-Space>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space><C-Space>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space><C-Space>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space><C-Space>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space><C-Space>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space><C-Space>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
+    " nmap <C-Space><C-Space>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
+    " nmap <C-Space><C-Space>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+    " nmap <C-Space><C-Space>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
 
 
     """"""""""""" key map timeouts
@@ -529,12 +553,9 @@ au BufRead,BufNewFile *.template set syntax=off
 let g:instant_rst_browser='opera'
 
 
-nnoremap ,doc :read $HOME/.vim/.skeleton.py<CR>A
-
 " Configure the `make` command to run RSpec
 nnoremap ,wikit :read $HOME/reps/wiki/title.template<CR>jjj :put =strftime(\"%F %X %z\")<CR>kJ
 nnoremap ,wiknew :put =strftime(\"%F-\")<CR>kJA
-
 "============HEX============
 " Hex read
 nmap <Leader>hr :%!xxd<CR> :set filetype=xxd<CR>
@@ -556,11 +577,23 @@ set makeprg=make
                        \ 'auto_generate_tags': 1}]
 " ============ END ============================
 "
-let g:netrw_banner = 0 "hide netrw top banner
-let g:netrw_list_hide = '.*\.swap$'  " Hide vim.swp files
-let g:netrw_liststyle = 3  " Change the directory view in netrw
-let g:netrw_browse_split = 4 " Open file on same windows vim
-let g:netrw_winsize = 20 " size of left window
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+
+let g:CheatSheetDoNotMap=1
+let g:CheatDoNotReplaceKeywordPrg=1
+
+" let g:completor_disable_filename_c = 1
+" let g:completor_disable_filename_cpp = 1
+let g:completor_disable_filename = 1
+let g:completor_disable_buffer = 1
+let g:completor_disable_ultisnips = 1
+let g:completor_enable_ultisnips= ['python', 'c', 'sh', 'cpp']
+let g:completor_enable_buffer= ['python', 'c', 'sh', 'cpp']
+
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>gs <cmd>Telescope grep_string<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
