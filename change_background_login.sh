@@ -4,6 +4,7 @@ set -eux
 
 WALL_DIR=/usr/share/backgrounds/
 # need permission for read this file
+# sudo chown $USER:$USER /etc/lightdm/lightdm-gtk-greeter.conf
 CONFIG_FILE=/etc/lightdm/lightdm-gtk-greeter.conf
 
 walpallers=($(find $WALL_DIR -name "custom*"))
