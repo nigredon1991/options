@@ -5,4 +5,5 @@
 * `go, pylint, shellckeck`
 * `clipman` - менеджер буферов
 * `https://github.com/chubin/cheat.sh` - много мануалов под рукой
+* `adobe-source-code-pro-fonts` - font for console
 

@@ -1,5 +1,3 @@
 # options
-Its my options for toolls. 
+Its my options for tools.
 
-font for console
-adobe-source-code-pro-fonts
