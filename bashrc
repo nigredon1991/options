@@ -22,6 +22,15 @@ export PATH="$PATH":/home/nglazov/.gem/ruby/2.7.0/bin/
 export SHELLCHECK_OPTS="-e SC2155 -e SC1091"
 alias ntop="nload"
 
+man() {
+    LESS_TERMCAP_md=$'\e[01;31m' \
+    LESS_TERMCAP_me=$'\e[0m' \
+    LESS_TERMCAP_se=$'\e[0m' \
+    LESS_TERMCAP_so=$'\e[01;44;33m' \
+    LESS_TERMCAP_ue=$'\e[0m' \
+    LESS_TERMCAP_us=$'\e[01;32m' \
+    command man "$@"
+}
 jenkinsfile_check(){
 	local jenkinsfile=${1:-Jenkinsfile}
 	curl --user user:pass -X POST -F 'jenkinsfile=<'"$jenkinsfile"'' http://$jenkins_url:8080/pipeline-model-converter/validate
