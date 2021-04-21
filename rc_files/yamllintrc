@@ -1,3 +1,4 @@
+# ~/.yamllintrc
 extends: default
 
 rules:

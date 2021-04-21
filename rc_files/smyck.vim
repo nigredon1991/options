@@ -1,4 +1,5 @@
 " ----------------------------------------------------------------------------
+"  /.vim/colors/smyck.vim
 " Vim color file
 " Maintainer:   John-Paul Bader <contact@smyck.org>
 " Last Change:  2012 April

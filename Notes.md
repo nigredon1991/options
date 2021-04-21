@@ -1,5 +1,7 @@
 # Run steam apps with nvidia optimus
 
+Path for rc files at 2 line
+
 ```
 prime-offload
 optimus-manager --switch hybrid
