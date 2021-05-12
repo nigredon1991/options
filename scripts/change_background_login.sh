@@ -14,3 +14,10 @@ printf "%s\n" ",s|^background = .*|background = $RANDOM_WALL|g" wq | ed -s $CONF
 
 # sed -i "s|^background = .*|background = $RANDOM_WALL|g" $CONFIG_FILE
 echo "new background $RANDOM_WALL"
+
+
+##############################
+# Copy and rename walpallers #
+##############################
+
+# sudo find /dir/with/walpallers/ -type f -exec sh -c 'x={};  y=${x##*/} ; cp $x /usr/share/backgrounds/${y/*/custom-$RANDOM.jpg}' \;
