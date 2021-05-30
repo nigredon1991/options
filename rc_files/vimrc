@@ -95,7 +95,6 @@ call plug#end()
 filetype on
 filetype plugin on
 filetype plugin indent on
-
 " Разбор vimrc в других папках
 set exrc
 set secure
@@ -317,7 +316,6 @@ if !hasmapto("<Plug>VLToggle")
 endif
 let &cpoptions = s:save_cpo | unlet s:save_cpo
 
-
 "  при переходе за границу в 80 символов в Ruby/Python/js/C/C++ подсвечиваем
 "  на темном фоне текст
 augroup vimrc_autocmds
@@ -337,8 +335,6 @@ augroup vimrc_autocmds
 augroup END
 
 nnoremap <F4> :!scp %:p example_server.lala:%:p <CR>
-
-
 let g:easytags_whitelist = ['reps']
 
 " ============ CSCOPE ============================
