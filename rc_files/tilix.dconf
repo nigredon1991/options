@@ -39,6 +39,10 @@ win-switch-to-session-6='<Alt>6'
 win-switch-to-session-7='<Alt>7'
 win-switch-to-session-8='<Alt>8'
 win-switch-to-session-9='<Alt>9'
+# Ctrl+Alt+A - add terminal auto
+# Ctrl+Alt+D - add terminal down
+# Ctrl+Alt+R - add terminal right
+# Ctrl+Alt+R - add terminal right
 
 [profiles]
 list=['2b7c4080-0ddd-46c5-8f23-563fd3ba789d']
