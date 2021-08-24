@@ -558,6 +558,7 @@ let g:ale_linters = {
                      \ 'yaml': ['yamllint'],
                      \ 'json': ['jsonlint'],
                      \ 'elixir': ['elixir-ls'],
+                     \ 'dart': ['dart_analyze'],
                      \}
 
 let g:ale_fixers = {
@@ -569,6 +570,7 @@ let g:ale_fixers = {
                      \ 'json': ['jq'],
                      \ 'racket': ['scmindent'],
                      \ 'elixir': ['elixir-ls'],
+                     \ 'dart': ['dart-format'],
                      \}
 let g:ale_elixir_elixir_ls_release= "/usr/lib/elixir-ls"
 let g:ale_c_cppcheck_executable= 'cppcheck'
