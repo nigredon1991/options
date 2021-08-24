@@ -17,8 +17,8 @@ set linespace=3
 
 let g:colors_name = "smyck"
 
-hi Normal               cterm=none ctermbg=none     ctermfg=15      gui=none        guibg=#282828   guifg=#F7F7F7
-hi LineNr               cterm=none ctermbg=none     ctermfg=8       gui=none        guibg=#282828   guifg=#8F8F8F
+hi Normal               cterm=none ctermbg=none     ctermfg=15      gui=none        guibg=#000000   guifg=#F7F7F7
+hi LineNr               cterm=none ctermbg=none     ctermfg=8       gui=none        guibg=#000000   guifg=#8F8F8F
 hi StatusLine           cterm=none ctermbg=8        ctermfg=15      gui=none        guibg=#5D5D5D   guifg=#FBFBFB
 hi StatusLineNC         cterm=none ctermbg=15       ctermfg=8       gui=none        guibg=#5D5D5D   guifg=#FBFBFB
 hi Search               cterm=none ctermbg=6        ctermfg=15      gui=none        guibg=#2EB5C1   guifg=#F7F7F7
@@ -53,7 +53,7 @@ hi Title                cterm=none ctermbg=none     ctermfg=2       gui=none    
 " Syntax Highlighting
 " ----------------------------------------------------------------------------
 hi Keyword              cterm=none ctermbg=none ctermfg=10          gui=none        guifg=#D1FA71
-hi Comment              cterm=none ctermbg=none ctermfg=7           gui=none        guifg=#1F1F1F
+hi Comment              cterm=none ctermbg=none ctermfg=7           gui=none        guifg=#757575
 hi Delimiter            cterm=none ctermbg=none ctermfg=15          gui=none        guifg=#F7F7F7
 hi Identifier           cterm=none ctermbg=none ctermfg=63          gui=none        guifg=#96D9F1
 hi Structure            cterm=none ctermbg=none ctermfg=63          gui=none        guifg=#9DEEF2
