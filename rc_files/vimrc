@@ -4,11 +4,8 @@ scriptencoding utf-8
 filetype off                  " required
 
 " Next time pip update
-" pip install neovim black wemake-python-styleguide pylint  mypy
+" pip install neovim black wemake-python-styleguide pylint mypy
 "== == == == == == == == == == == == == == == == == == == == == == == == == == =
-" Vundle settings
-"== == == == == == == == == == == == == == == == == == == == == == == == == == =
-" set the runtime path to include Vundle and initialize
 "
 let g:polyglot_disabled = ['rst', 'json', 'template']
 let g:groovy_ignore_groovydoc=1 " in Jenkinsfile include javascript lang options, don't need this
@@ -22,8 +19,6 @@ call plug#begin('~/.vim/plugged')
 " :w !sudo dd of=% - запись через sudo
 " /\%Vpattern - поиск в последнем выделении
 
-"Plug 'gmarik/Vundle.vim'        " let Vundle manage Vundle, required
-
 Plug 'junegunn/vader.vim'
 
 "------ -= == Code/project navigation == =-------------
@@ -31,13 +26,13 @@ Plug 'tpope/vim-commentary'           " My commentary Fast comment - gc in visua
 Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Need for vebugger
 Plug 'idanarye/vim-vebugger'
 "--------------- -= == Other == =----------------------
-Plug 'vim-airline/vim-airline'               " Lean & mean status/tabline for vim
+" Plug 'vim-airline/vim-airline'               " Lean & mean status/tabline for vim
 " Plug 'majutsushi/tagbar'
 "Plun 'fisadev/FixedTaskList.vim'      " Pending tasks list
 "Plun 'rosenfeld/conque-term'          " Consoles as buffers
 Plug 'tpope/vim-surround'           " ysiw] - заковычить слово, cst} - изменить на скобки, ds} - удалить ковычки
 Plug 'tpope/vim-repeat'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline-themes'
 
 "- ----------- -= == Languages support == =-------------
 " --Python - --
@@ -56,6 +51,11 @@ Plug 'dbeniamine/cheat.sh-vim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-hop.nvim'
+" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" Plug 'nvim-treesitter/playground'
+Plug 'ThePrimeagen/refactoring.nvim'
+Plug 'neovim/nvim-lspconfig'
 let g:easytags_syntax_keyword = 'always'
 let g:easytags_async = 1
 let g:easytags_auto_highlight = 0
@@ -70,24 +70,28 @@ let g:riv_auto_format_table = 0
 Plug 'srstevenson/vim-picker'
 "Plug 'michaeljsmith/vim-indent-object'
 
-"Plug 'autozimu/LanguageClient-neovim', {
-"    \ 'branch': 'next',
-"    \ 'do': 'bash install.sh',
-"    \ }
-
-" (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-
 Plug 'vimwiki/vimwiki'
 
-" Plug 'davidhalter/jedi-vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'sirver/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'will133/vim-dirdiff'
+
+Plug 'romgrk/todoist.nvim', { 'do': ':TodoistInstall' }
+
+" vim  --cmd "let g:vimspector_enable_mappings='HUMAN'"
+Plug 'puremourning/vimspector'
+
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'lewis6991/gitsigns.nvim'
+Plug 'famiu/feline.nvim'
+
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'SmiteshP/nvim-gps'
 
 
 call plug#end()
@@ -95,9 +99,11 @@ call plug#end()
 filetype on
 filetype plugin on
 filetype plugin indent on
+
 " Разбор vimrc в других папках
 set exrc
 set secure
+" set autoread " auto read changes in file
 " Macros
 " let @b = "Ili**A**"
 " Don't redraw while executing macros(good performance config)
@@ -110,10 +116,7 @@ set cursorline
 set hidden
 set nofoldenable
 set modelines=0
-"set clipboard+=unnamed
 set clipboard=unnamed
-"set synmaxcol=128 "Ломает подсветку синтаксиса в php после слишком длинной
-"строки"
 "set ttyscroll=10
 set nowrap
 set number
@@ -122,7 +125,6 @@ set smartcase
 set wildmenu
 set wildmode=list:longest
 
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
 set backup
 set writebackup
 set noswapfile
@@ -130,21 +132,19 @@ set noswapfile
 set autoindent
 set tabstop=4
 set expandtab
-" set noexpandtab
 
 set splitbelow
 set splitright
-"set background = dark
 set cmdheight=2
 set t_Co=256
 colorscheme smyck
+set termguicolors
 set grepprg=grep\ -Irn\ $*\ /dev/null
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set backspace=indent,eol,start
 aunmenu Help.
 aunmenu Window.
-"let no_buffers_menu=1
 set mousemodel=popup
 set ruler
 set completeopt-=preview
@@ -159,7 +159,6 @@ set ttyfast
 " включить подсветку кода
 syntax on
 set showcmd
-
 
 set switchbuf=useopen
 
@@ -183,14 +182,351 @@ map <C-h> <C-w><Left>
 nnoremap <silent> <bs> <C-w><Left>
 tnoremap <C-\> <C-\><C-n>
 
+nnoremap n nzz
+nnoremap N Nzz
+
+" move vertically by visual line with j and k
+nnoremap j gj
+nnoremap k gk
+
 if has('nvim')
     augroup TerminalStuff
       autocmd TermOpen * setlocal nonumber norelativenumber
       tnoremap <expr> <A-r> '<C-\><C-N>"'.nr2char(getchar()).'pi'
     augroup END
+
+lua << EOF
+require('gitsigns').setup()
+
+require("nvim-gps").setup({
+	icons = {
+		["class-name"] = ' ',      -- Classes and class-like objects
+		["function-name"] = ' ',   -- Functions
+		["method-name"] = ' '      -- Methods (functions inside class-like objects)
+	},
+	languages = {                    -- You can disable any language individually here
+		["c"] = true,
+		["cpp"] = true,
+		["go"] = true,
+		["java"] = true,
+		["javascript"] = true,
+		["lua"] = true,
+		["python"] = true,
+		["rust"] = true,
+	},
+	separator = ' > ',
+})
+
+
+local colors = {
+    bg = '#282c34',
+    fg = '#abb2bf',
+    yellow = '#e0af68',
+    cyan = '#56b6c2',
+    darkblue = '#081633',
+    green = '#98c379',
+    orange = '#d19a66',
+    violet = '#a9a1e1',
+    magenta = '#c678dd',
+    blue = '#61afef',
+    red = '#e86671'
+}
+
+local lsp = require 'feline.providers.lsp'
+local vi_mode_utils = require 'feline.providers.vi_mode'
+
+local vi_mode_colors = {
+    NORMAL = colors.green,
+    INSERT = colors.red,
+    VISUAL = colors.magenta,
+    OP = colors.green,
+    BLOCK = colors.blue,
+    REPLACE = colors.violet,
+    ['V-REPLACE'] = colors.violet,
+    ENTER = colors.cyan,
+    MORE = colors.cyan,
+    SELECT = colors.orange,
+    COMMAND = colors.green,
+    SHELL = colors.green,
+    TERM = colors.green,
+    NONE = colors.yellow
+}
+
+local icons = {
+    linux = ' ',
+    macos = ' ',
+    windows = ' ',
+
+    errs = ' ',
+    warns = ' ',
+    infos = ' ',
+    hints = ' ',
+
+    lsp = ' ',
+    git = ''
+}
+
+local function file_osinfo()
+    local os = vim.bo.fileformat:upper()
+    local icon
+    if os == 'UNIX' then
+        icon = icons.linux
+    elseif os == 'MAC' then
+        icon = icons.macos
+    else
+        icon = icons.windows
+    end
+    return icon .. os
+end
+
+local function lsp_diagnostics_info()
+    return {
+        errs = lsp.get_diagnostics_count('Error'),
+        warns = lsp.get_diagnostics_count('Warning'),
+        infos = lsp.get_diagnostics_count('Information'),
+        hints = lsp.get_diagnostics_count('Hint')
+    }
+end
+
+local function diag_enable(f, s)
+    return function()
+        local diag = f()[s]
+        return diag and diag ~= 0
+    end
+end
+
+local function diag_of(f, s)
+    local icon = icons[s]
+    return function()
+        local diag = f()[s]
+        return icon .. diag
+    end
+end
+
+local function vimode_hl()
+    return {
+        name = vi_mode_utils.get_mode_highlight_name(),
+        fg = vi_mode_utils.get_mode_color()
+    }
+end
+
+-- LuaFormatter off
+
+local comps = {
+    vi_mode = {
+        left = {
+            provider = '▊',
+            hl = vimode_hl,
+            right_sep = ' '
+        },
+        right = {
+            provider = '▊',
+            hl = vimode_hl,
+            left_sep = ' '
+        }
+    },
+    file = {
+        info = {
+            provider = 'file_info',
+            hl = {
+                fg = colors.blue,
+                style = 'bold'
+            },
+            type = 'relative-path'
+        },
+        encoding = {
+            provider = 'file_encoding',
+            left_sep = ' ',
+            hl = {
+                fg = colors.violet,
+                style = 'bold'
+            }
+        },
+        type = {
+            provider = 'file_type'
+        },
+        os = {
+            provider = file_osinfo,
+            left_sep = ' ',
+            hl = {
+                fg = colors.violet,
+                style = 'bold'
+            }
+        }
+    },
+    line_percentage = {
+        provider = 'line_percentage',
+        left_sep = ' ',
+        hl = {
+            style = 'bold'
+        }
+    },
+    scroll_bar = {
+        provider = 'scroll_bar',
+        left_sep = ' ',
+        hl = {
+            fg = colors.blue,
+            style = 'bold'
+        }
+    },
+    diagnos = {
+        err = {
+            provider = diag_of(lsp_diagnostics_info, 'errs'),
+            left_sep = ' ',
+            enabled = diag_enable(lsp_diagnostics_info, 'errs'),
+            hl = {
+                fg = colors.red
+            }
+        },
+        warn = {
+            provider = diag_of(lsp_diagnostics_info, 'warns'),
+            left_sep = ' ',
+            enabled = diag_enable(lsp_diagnostics_info, 'warns'),
+            hl = {
+                fg = colors.yellow
+            }
+        },
+        info = {
+            provider = diag_of(lsp_diagnostics_info, 'infos'),
+            left_sep = ' ',
+            enabled = diag_enable(lsp_diagnostics_info, 'infos'),
+            hl = {
+                fg = colors.blue
+            }
+        },
+        hint = {
+            provider = diag_of(lsp_diagnostics_info, 'hints'),
+            left_sep = ' ',
+            enabled = diag_enable(lsp_diagnostics_info, 'hints'),
+            hl = {
+                fg = colors.cyan
+            }
+        },
+    },
+    lsp = {
+        name = {
+            provider = 'lsp_client_names',
+            left_sep = ' ',
+            icon = icons.lsp,
+            hl = {
+                fg = colors.yellow
+            }
+        }
+    },
+    git = {
+        branch = {
+            provider = 'git_branch',
+            icon = icons.git,
+            left_sep = ' ',
+            hl = {
+                fg = colors.violet,
+                style = 'bold'
+            },
+        },
+        add = {
+            provider = 'git_diff_added',
+            hl = {
+                fg = colors.green
+            }
+        },
+        change = {
+            provider = 'git_diff_changed',
+            hl = {
+                fg = colors.orange
+            }
+        },
+        remove = {
+            provider = 'git_diff_removed',
+            hl = {
+                fg = colors.red
+            }
+        }
+    }
+}
+
+local properties = {
+    force_inactive = {
+        filetypes = {
+            'NvimTree',
+            'dbui',
+            'packer',
+            'startify',
+            'fugitive',
+            'fugitiveblame'
+        },
+        buftypes = {'terminal'},
+        bufnames = {}
+    }
+}
+
+local components = {
+    left = {
+        active = {
+            comps.vi_mode.left,
+            comps.file.info,
+            comps.lsp.name,
+            comps.diagnos.err,
+            comps.diagnos.warn,
+            comps.diagnos.hint,
+            comps.diagnos.info
+        },
+        inactive = {
+            comps.vi_mode.left,
+            comps.file.info
+        }
+    },
+    mid = {
+        active = {},
+        inactive = {}
+    },
+    right = {
+        active = {
+            comps.git.add,
+            comps.git.change,
+            comps.git.remove,
+            comps.file.os,
+            comps.git.branch,
+            comps.line_percentage,
+            comps.scroll_bar,
+            comps.vi_mode.right
+        },
+        inactive = {}
+    }
+}
+
+table.insert(components.left.active, {
+	provider = function()
+		return require("nvim-gps").get_location()
+	end,
+	enabled = function()
+		return require("nvim-gps").is_available()
+	end
+})
+
+-- LuaFormatter on
+
+require'feline'.setup {
+    default_bg = colors.bg,
+    default_fg = colors.fg,
+    components = components,
+    properties = properties,
+    vi_mode_colors = vi_mode_colors
+}
+
+require'nvim-web-devicons'.setup {
+ -- globally enable default icons (default to false)
+ -- will get overriden by `get_icons` option
+ default = true;
+}
+
+EOF
+
 endif
 
 let mapleader = "\<Space>"
+
+nnoremap <leader>P ggVGy<C-o>
+nmap <silent> <leader>/ :nohlsearch<CR>
 
 nnoremap <Leader>+ :vertical resize +5<CR>
 nnoremap <Leader>- :vertical resize -5<CR>
@@ -210,27 +546,31 @@ vnoremap <Leader>/ <Esc>/<C-R>=<SID>ScopeSearch('[[', 2)<CR><CR>
 "==================================================
 "++ ALE-Settings
 ""================================================
-set statusline+=%#warningmsg#
+" set statusline+=%#warningmsg#
 
 let g:ale_enabled = 1
 let g:ale_fix_on_save = 0
 let g:ale_linters = {
                      \'sh': ['shellcheck'],
-                     \ 'python': ['pylint', 'flake8', "mypy"],
+                     \ 'python': ['flake8', 'pylsp', 'mypy', 'pylint'],
                      \ 'c': ['cppcheck', 'cc'],
                      \ 'cpp': ['cppcheck'],
                      \ 'yaml': ['yamllint'],
                      \ 'json': ['jsonlint'],
+                     \ 'elixir': ['elixir-ls'],
                      \}
 
 let g:ale_fixers = {
-                     \ 'python' :['black'],
+                     \ 'groovy': ['remove_trailing_lines', 'trim_whitespace'],
+                     \ 'python' :['black', 'isort'],
                      \  'sh': [ 'shfmt'],
                      \ 'c': ['clang-format'],
                      \ 'cpp': ['clang-format'],
                      \ 'json': ['jq'],
                      \ 'racket': ['scmindent'],
+                     \ 'elixir': ['elixir-ls'],
                      \}
+let g:ale_elixir_elixir_ls_release= "/usr/lib/elixir-ls"
 let g:ale_c_cppcheck_executable= 'cppcheck'
 let g:ale_c_cppcheck_options= '-v --enable=style -DDAN_NEVER="" -DDAN_FREQUENT=""'
 let g:ale_yaml_yamllint_options= '-c ~/.yamllintrc'
@@ -245,11 +585,34 @@ let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: LLVM, IndentWidth: 8
 let g:ale_set_highlights = 1
 let g:ale_completion_enabled = 1
 let g:airline#extensions#ale#enabled = 1
+
+highlight ALEErrorSign ctermfg=9 ctermbg=15 guifg=#C30500 guibg=#F5F5F5
+highlight ALEWarningSign ctermfg=11 ctermbg=15 guifg=#ED6237 guibg=#F5F5F5
+"let g:ale_warn_about_trailing_whitespace = 0
+let g:ale_maximum_file_size = 1024 * 1024
+let g:ale_code_actions_enabled = 1
+let g:ale_set_balloons_legacy_echo = 1
+let g:ale_c_parse_compile_commands = 1
+
+" Options for different linters.
+let g:ale_python_mypy_ignore_invalid_syntax = 1
+let g:ale_python_mypy_options = '--incremental'
+"let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_text_changed = 1
+let g:ale_lint_on_insert_leave = 1
+let g:ale_linters_explicit = 1
 "let g:ale_set_loclist = 0
 "let g:ale_set_quickfix = 1
 nmap <F8> <Plug>(ale_fix)
+nmap gr :ALERename<CR>
+nmap gd :ALEGoToDefinition<CR>
+nmap <K> :ALEHover<CR>
 " write with sudo
 cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+
+" history scroll
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
 
 " Return a pattern to search within a specified scope, or
 " return a backslash to cancel search if scope not found.
@@ -316,6 +679,7 @@ if !hasmapto("<Plug>VLToggle")
 endif
 let &cpoptions = s:save_cpo | unlet s:save_cpo
 
+
 "  при переходе за границу в 80 символов в Ruby/Python/js/C/C++ подсвечиваем
 "  на темном фоне текст
 augroup vimrc_autocmds
@@ -328,7 +692,7 @@ augroup vimrc_autocmds
     autocmd FileType c,cpp  setlocal expandtab shiftwidth=2 softtabstop=2
     autocmd FileType md,markdown setlocal syntax=mkd filetype=markdown.pandoc shiftwidth=4 softtabstop=4
     autocmd FileType yaml setlocal shiftwidth=1 softtabstop=1 foldmethod=indent
-    autocmd FileType Jenkinsfile setlocal shiftwidth=4 softtabstop=4
+    autocmd FileType Jenkinsfile setlocal shiftwidth=4 softtabstop=4 commentstring=\/\/\ %s
     autocmd FileType vim setlocal shiftwidth=4 softtabstop=4
     autocmd FileType racket setlocal shiftwidth=2 softtabstop=2 tabstop=4 foldmethod=indent
 
@@ -339,7 +703,7 @@ let g:easytags_whitelist = ['reps']
 
 " ============ CSCOPE ============================
 function! UpdateCscopeDb()
-    let extensions = ['"*.cpp"', '"*.h"', '"*.hpp"', '"*.inl"', '"*.c"', '"*.java"', '"*.sh"', '"*.py"']
+    let extensions = ['"*.cpp"', '"*.h"', '"*.hpp"', '"*.inl"', '"*.c"', '"*.java"', '"*.sh"', '"*.py"', '"Makefile.*"']
     let update_file_list = 'find . -name ' . join(extensions, ' -o -name ') . ' > ./cscope.files'
     echo update_file_list
     echo system(update_file_list)
@@ -493,35 +857,12 @@ if has('cscope')
 endif
 
 
-nmap <F12> :call UpdateCscopeDb()<cr>
-vmap <F12> <esc>:call UpdateCscopeDb()<cr>
-imap <F12> <esc>:call UpdateCscopeDb()<cr>
+nmap <F9> :call UpdateCscopeDb()<cr>
+vmap <F9> <esc>:call UpdateCscopeDb()<cr>
+imap <F9> <esc>:call UpdateCscopeDb()<cr>
 
 " ============ CSCOPE END ============================
 
-
-" TEST vimrc w0rp
-" --- ALE settings ---
-"
-" Disable ALE warnings about trailing whitespace.
-let g:ale_sign_error = '◉'
-let g:ale_sign_warning = '◉'
-highlight ALEErrorSign ctermfg=9 ctermbg=15 guifg=#C30500 guibg=#F5F5F5
-highlight ALEWarningSign ctermfg=11 ctermbg=15 guifg=#ED6237 guibg=#F5F5F5
-"let g:ale_warn_about_trailing_whitespace = 0
-let g:ale_maximum_file_size = 1024 * 1024
-let g:ale_completion_enabled = 1
-let g:ale_code_actions_enabled = 1
-let g:ale_set_balloons_legacy_echo = 1
-let g:ale_c_parse_compile_commands = 1
-
-" Options for different linters.
-let g:ale_python_mypy_ignore_invalid_syntax = 1
-let g:ale_python_mypy_options = '--incremental'
-"let g:ale_lint_on_text_changed = 'normal'
-let g:ale_lint_on_text_changed = 1
-let g:ale_lint_on_insert_leave = 1
-let g:ale_linters_explicit = 1
 
 
 nmap <unique> <leader>pe <Plug>(PickerEdit)
@@ -580,16 +921,69 @@ let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:CheatSheetDoNotMap=1
 let g:CheatDoNotReplaceKeywordPrg=1
 
+let g:netrw_list_hide= '.*\.swp$'
+let g:netrw_list_hide= netrw_gitignore#Hide().'.*\.swp$'
+" https://vi.stackexchange.com/questions/26007/getting-gx-to-open-a-url
+nmap gx :silent execute "!xdg-open " . shellescape("<cfile>")<CR>
+
+
 " let g:completor_disable_filename_c = 1
 " let g:completor_disable_filename_cpp = 1
-let g:completor_disable_filename = 1
-let g:completor_disable_buffer = 1
-let g:completor_disable_ultisnips = 1
-let g:completor_enable_ultisnips= ['python', 'c', 'sh', 'cpp']
-let g:completor_enable_buffer= ['python', 'c', 'sh', 'cpp']
+" let g:completor_disable_filename = 1
+" let g:completor_disable_buffer = 1
+" let g:completor_disable_ultisnips = 1
+" let g:completor_enable_ultisnips= ['python', 'c', 'sh', 'cpp']
+" let g:completor_enable_buffer= ['python', 'c', 'sh', 'cpp']
+"
+lua << EOF
+require('telescope').setup{
+  defaults = {
+    vimgrep_arguments = {
+      'rg',
+      '--color=never',
+      '--no-heading',
+      '--with-filename',
+      '--line-number',
+      '--column',
+      '--smart-case',
+      '--ignore-file',
+      '.gitignore'
+    },
+    prompt_prefix = "> ",
+    selection_caret = "> ",
+    entry_prefix = "  ",
+    initial_mode = "insert",
+    selection_strategy = "reset",
+    sorting_strategy = "descending",
+    layout_strategy = "horizontal",
+    layout_config = {
+      horizontal = {
+        mirror = false,
+      },
+      vertical = {
+        mirror = false,
+      },
+    },
+    file_sorter =  require'telescope.sorters'.get_fuzzy_file,
+    file_ignore_patterns = {},
+    generic_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
+    path_display = shorten,
+    winblend = 0,
+    borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
+    color_devicons = true,
+    use_less = true,
+    set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
+    file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
+    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
+  }
+}
+EOF
 
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>gs <cmd>Telescope grep_string<cr>
+" nnoremap <leader>ge <cmd>Telescope grep_string find_command=rg,--color=never,--no-heading,--with-filename,--line-number,--column,--smart-case,--ignore-file,.gitignore <cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+" for show all resulsts in quickfixlist <C-q> - https://github.com/nvim-telescope/telescope.nvim/issues/42

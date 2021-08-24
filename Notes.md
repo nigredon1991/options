@@ -23,3 +23,8 @@ sudo nmcli con del <UUID>
 nmcli con down <SSID or UUID>
 nmcli con up <SSID or UUID>
 ```
+
+# More symbols in terminal
+```
+sudo pacman -S noto-fonts-emoji
+```
