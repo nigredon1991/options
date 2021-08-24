@@ -559,11 +559,14 @@ let g:ale_linters = {
                      \ 'json': ['jsonlint'],
                      \ 'elixir': ['elixir-ls'],
                      \ 'dart': ['dart_analyze'],
+                     \ 'dart': ['dart_analyze', 'language_server'],
                      \}
 
 let g:ale_fixers = {
                      \ 'groovy': ['remove_trailing_lines', 'trim_whitespace'],
                      \ 'python' :['black', 'isort'],
+                     \ 'groovy': ['remove_trailing_lines', 'trim_whitespace'],
+                     \ 'python': ['black'],
                      \  'sh': [ 'shfmt'],
                      \ 'c': ['clang-format'],
                      \ 'cpp': ['clang-format'],
@@ -573,6 +576,13 @@ let g:ale_fixers = {
                      \ 'dart': ['dart-format'],
                      \}
 let g:ale_elixir_elixir_ls_release= "/usr/lib/elixir-ls"
+
+" For dart language server
+" cat  /bin/dart_language_server
+" #!/bin/bash
+" dart /home/$USER/reps/flutter/bin/cache/dart-sdk/bin/snapshots/analysis_server.dart.snapshot --lsp --client-version 1.2
+
+let g:ale_c_cc_options= '-Wno-gnu'
 let g:ale_c_cppcheck_executable= 'cppcheck'
 let g:ale_c_cppcheck_options= '-v --enable=style -DDAN_NEVER="" -DDAN_FREQUENT=""'
 let g:ale_yaml_yamllint_options= '-c ~/.yamllintrc'
@@ -892,7 +902,6 @@ au BufRead,BufNewFile *.template set syntax=off
 let g:instant_rst_browser='opera'
 
 
-" Configure the `make` command to run RSpec
 nnoremap ,wikit :read $HOME/reps/wiki/title.template<CR>jjj :put =strftime(\"%F %X %z\")<CR>kJ
 nnoremap ,wiknew :put =strftime(\"%F-\")<CR>kJA
 "============HEX============
