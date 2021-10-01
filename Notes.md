@@ -28,3 +28,9 @@ nmcli con up <SSID or UUID>
 ```
 sudo pacman -S noto-fonts-emoji
 ```
+
+Change volume step default by media keys in xfce from 5 to 3
+```
+xfconf-query -c xfce4-panel -lv | grep pulseaudio
+xfconf-query -c xfce4-panel -p /plugins/plugin-<number>/volume-step --create -t int -s 3
+```
