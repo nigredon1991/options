@@ -1,0 +1,5 @@
+# /etc/ssh/ssh_config
+
+Host *
+    HostkeyAlgorithms +ssh-rsa
+    PubkeyAcceptedAlgorithms +ssh-rsa
