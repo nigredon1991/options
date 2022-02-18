@@ -25,6 +25,7 @@ Plug 'junegunn/vader.vim'
 Plug 'tpope/vim-commentary'           " My commentary Fast comment - gc in visual mode
 Plug 'Shougo/vimproc.vim', {'do' : 'make'} " Need for vebugger
 Plug 'idanarye/vim-vebugger'
+Plug 'thiagoalessio/rainbow_levels.vim'
 "--------------- -= == Other == =----------------------
 " Plug 'vim-airline/vim-airline'               " Lean & mean status/tabline for vim
 " Plug 'majutsushi/tagbar'
@@ -88,10 +89,12 @@ Plug 'puremourning/vimspector'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'famiu/feline.nvim'
+Plug 'feline-nvim/feline.nvim', { 'tag': 'v0.1' }
 
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'SmiteshP/nvim-gps'
+Plug 'wellle/context.vim'
+Plug 'wellle/targets.vim'
 
 
 call plug#end()
@@ -181,6 +184,7 @@ map <C-l> <C-w><Right>
 map <C-h> <C-w><Left>
 nnoremap <silent> <bs> <C-w><Left>
 tnoremap <C-\> <C-\><C-n>
+inoremap jk <esc>
 
 nnoremap n nzz
 nnoremap N Nzz
@@ -197,6 +201,7 @@ if has('nvim')
 
 lua << EOF
 require('gitsigns').setup()
+require('feline.providers.git').git_info_exists()
 
 require("nvim-gps").setup({
 	icons = {
@@ -216,6 +221,9 @@ require("nvim-gps").setup({
 	},
 	separator = ' > ',
 })
+
+local lsp = require 'feline.providers.lsp'
+local vi_mode_utils = require 'feline.providers.vi_mode'
 
 
 local colors = {
@@ -309,9 +317,6 @@ local function vimode_hl()
         fg = vi_mode_utils.get_mode_color()
     }
 end
-
--- LuaFormatter off
-
 local comps = {
     vi_mode = {
         left = {
@@ -332,7 +337,7 @@ local comps = {
                 fg = colors.blue,
                 style = 'bold'
             },
-            type = 'relative-path'
+            type = 'relative'
         },
         encoding = {
             provider = 'file_encoding',
@@ -352,6 +357,12 @@ local comps = {
                 fg = colors.violet,
                 style = 'bold'
             }
+        }
+    },
+    position = {
+        provider = 'position',
+        hl = {
+            style = 'bold'
         }
     },
     line_percentage = {
@@ -444,24 +455,10 @@ local comps = {
     }
 }
 
-local properties = {
-    force_inactive = {
-        filetypes = {
-            'NvimTree',
-            'dbui',
-            'packer',
-            'startify',
-            'fugitive',
-            'fugitiveblame'
-        },
-        buftypes = {'terminal'},
-        bufnames = {}
-    }
-}
+local components = {active = {},inactive = {}}
 
-local components = {
-    left = {
-        active = {
+-- Insert three sections (left, mid and right) for the active statusline
+table.insert(components.active, {
             comps.vi_mode.left,
             comps.file.info,
             comps.lsp.name,
@@ -469,49 +466,44 @@ local components = {
             comps.diagnos.warn,
             comps.diagnos.hint,
             comps.diagnos.info
-        },
-        inactive = {
-            comps.vi_mode.left,
-            comps.file.info
-        }
-    },
-    mid = {
-        active = {},
-        inactive = {}
-    },
-    right = {
-        active = {
+    })
+table.insert(components.active, {
             comps.git.add,
             comps.git.change,
             comps.git.remove,
+            comps.position,
             comps.file.os,
             comps.git.branch,
             comps.line_percentage,
             comps.scroll_bar,
             comps.vi_mode.right
-        },
-        inactive = {}
-    }
-}
+    })
 
-table.insert(components.left.active, {
+-- Insert two sections (left and right) for the inactive statusline
+table.insert(components.inactive,
+    {
+            comps.vi_mode.left,
+            comps.file.info
+    }
+)
+table.insert(components.inactive, {})
+
+local gps = require("nvim-gps")
+
+table.insert(components.active[1], {
 	provider = function()
-		return require("nvim-gps").get_location()
+		return gps.get_location()
 	end,
 	enabled = function()
-		return require("nvim-gps").is_available()
+		return gps.is_available()
 	end
 })
 
--- LuaFormatter on
-
-require'feline'.setup {
-    default_bg = colors.bg,
-    default_fg = colors.fg,
-    components = components,
-    properties = properties,
-    vi_mode_colors = vi_mode_colors
-}
+require'feline'.setup(
+    {
+        components = components
+    }
+)
 
 require'nvim-web-devicons'.setup {
  -- globally enable default icons (default to false)
@@ -558,15 +550,12 @@ let g:ale_linters = {
                      \ 'yaml': ['yamllint'],
                      \ 'json': ['jsonlint'],
                      \ 'elixir': ['elixir-ls'],
-                     \ 'dart': ['dart_analyze'],
                      \ 'dart': ['dart_analyze', 'language_server'],
                      \}
 
 let g:ale_fixers = {
-                     \ 'groovy': ['remove_trailing_lines', 'trim_whitespace'],
                      \ 'python' :['black', 'isort'],
                      \ 'groovy': ['remove_trailing_lines', 'trim_whitespace'],
-                     \ 'python': ['black'],
                      \  'sh': [ 'shfmt'],
                      \ 'c': ['clang-format'],
                      \ 'cpp': ['clang-format'],
@@ -575,6 +564,7 @@ let g:ale_fixers = {
                      \ 'elixir': ['elixir-ls'],
                      \ 'dart': ['dart-format'],
                      \}
+let g:ale_json_jq_options= ""
 let g:ale_elixir_elixir_ls_release= "/usr/lib/elixir-ls"
 
 " For dart language server
@@ -934,6 +924,14 @@ let g:CheatDoNotReplaceKeywordPrg=1
 
 let g:netrw_list_hide= '.*\.swp$'
 let g:netrw_list_hide= netrw_gitignore#Hide().'.*\.swp$'
+let g:netrw_liststyle = 1
+let g:netrw_ftp_cmd= "ftp -p"
+let g:netrw_uid = "anonymous"
+let g:netrw_passwd = "anonymous"
+" print file path
+" map \f ^<C-V>$jy:echo @%.@"<CR>
+map \F ^<C-V>$jy:echo substitute(@%,'ftp://anonymous','ftp://anonymous:pass','g').@"<CR>
+map \f ^<C-V>iW"xy :let @+=substitute(@%,'ftp://anonymous','ftp://anonymous:pass','g').@x"<CR>
 " https://vi.stackexchange.com/questions/26007/getting-gx-to-open-a-url
 nmap gx :silent execute "!xdg-open " . shellescape("<cfile>")<CR>
 
@@ -998,3 +996,4 @@ nnoremap <leader>gs <cmd>Telescope grep_string<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " for show all resulsts in quickfixlist <C-q> - https://github.com/nvim-telescope/telescope.nvim/issues/42
+map <leader>l :RainbowLevelsToggle<cr>
