@@ -4,7 +4,7 @@ scriptencoding utf-8
 filetype off                  " required
 
 " Next time pip update
-" pip install neovim black wemake-python-styleguide pylint mypy
+" pip install neovim black wemake-python-styleguide pylint mypy python-language-server
 "== == == == == == == == == == == == == == == == == == == == == == == == == == =
 "
 let g:polyglot_disabled = ['rst', 'json', 'template']
@@ -42,7 +42,6 @@ Plug 'michaeljsmith/vim-indent-object'
 Plug 'w0rp/ale'          " Asynchronous Lint Engine
 Plug 'maralla/completor.vim' " Заканчиватель
 Plug 'powerman/vim-plugin-ruscmd' " Команды на русском языке
-Plug 'vim-pandoc/vim-pandoc-syntax' " Удобная подсветка для markdown
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
 Plug 'martinda/Jenkinsfile-vim-syntax'
@@ -74,7 +73,7 @@ Plug 'srstevenson/vim-picker'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-Plug 'vimwiki/vimwiki'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 Plug 'junegunn/vim-easy-align'
 Plug 'sirver/ultisnips'
@@ -89,12 +88,12 @@ Plug 'puremourning/vimspector'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'feline-nvim/feline.nvim', { 'tag': 'v0.1' }
+Plug 'feline-nvim/feline.nvim', { 'branch': 'develop' }
+
 
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'SmiteshP/nvim-gps'
 Plug 'wellle/context.vim'
-Plug 'wellle/targets.vim'
 
 
 call plug#end()
@@ -551,6 +550,8 @@ let g:ale_linters = {
                      \ 'json': ['jsonlint'],
                      \ 'elixir': ['elixir-ls'],
                      \ 'dart': ['dart_analyze', 'language_server'],
+                     \ 'rust': ['cargo', 'rls'],
+                     \ 'sql': ['sqlint'],
                      \}
 
 let g:ale_fixers = {
@@ -563,6 +564,8 @@ let g:ale_fixers = {
                      \ 'racket': ['scmindent'],
                      \ 'elixir': ['elixir-ls'],
                      \ 'dart': ['dart-format'],
+                     \ 'rust': ['rustfmt'],
+                     \ 'sql': ['pgformatter'],
                      \}
 let g:ale_json_jq_options= ""
 let g:ale_elixir_elixir_ls_release= "/usr/lib/elixir-ls"
@@ -572,13 +575,14 @@ let g:ale_elixir_elixir_ls_release= "/usr/lib/elixir-ls"
 " #!/bin/bash
 " dart /home/$USER/reps/flutter/bin/cache/dart-sdk/bin/snapshots/analysis_server.dart.snapshot --lsp --client-version 1.2
 
+let g:ale_rust_rustc_options= '-O ' " --error-format=json
 let g:ale_c_cc_options= '-Wno-gnu'
 let g:ale_c_cppcheck_executable= 'cppcheck'
 let g:ale_c_cppcheck_options= '-v --enable=style -DDAN_NEVER="" -DDAN_FREQUENT=""'
 let g:ale_yaml_yamllint_options= '-c ~/.yamllintrc'
 let g:ale_sh_shfmt_executable= 'shfmt'
 let g:ale_python_black_executable= 'black'
-let g:ale_python_black_options= '-l 100'
+let g:ale_python_black_options= '' " '-l 100'
 let g:ale_python_flake8_options= '--ignore=Q000,T001,C101,S303,WPS110,WPS305,WPS221,WPS335,D100,D104,D401,W504,RST201,RST301,RST303,RST304,D101,D103,D412,E800,S101,WPS111 --max-line-length=100 --no-isort-config'
 let g:ale_sh_shfmt_options= '--sr' " Если надо будет при перенаправлени в файл ставить пробел
 let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google}"'
@@ -692,7 +696,6 @@ augroup vimrc_autocmds
     autocmd FileType ruby,python,javascript,php setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=4 foldmethod=indent
     autocmd FileType bash,sh,hook setlocal noexpandtab shiftwidth=4 softtabstop=4
     autocmd FileType c,cpp  setlocal expandtab shiftwidth=2 softtabstop=2
-    autocmd FileType md,markdown setlocal syntax=mkd filetype=markdown.pandoc shiftwidth=4 softtabstop=4
     autocmd FileType yaml setlocal shiftwidth=1 softtabstop=1 foldmethod=indent
     autocmd FileType Jenkinsfile setlocal shiftwidth=4 softtabstop=4 commentstring=\/\/\ %s
     autocmd FileType vim setlocal shiftwidth=4 softtabstop=4
@@ -997,3 +1000,5 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " for show all resulsts in quickfixlist <C-q> - https://github.com/nvim-telescope/telescope.nvim/issues/42
 map <leader>l :RainbowLevelsToggle<cr>
+
+let g:mkdp_auto_start = 0
