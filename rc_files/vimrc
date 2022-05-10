@@ -90,10 +90,11 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'feline-nvim/feline.nvim', { 'branch': 'develop' }
 
-
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'SmiteshP/nvim-gps'
 Plug 'wellle/context.vim'
+Plug 'wellle/targets.vim'
+Plug 'tpope/vim-abolish'
 
 
 call plug#end()
@@ -223,7 +224,6 @@ require("nvim-gps").setup({
 
 local lsp = require 'feline.providers.lsp'
 local vi_mode_utils = require 'feline.providers.vi_mode'
-
 
 local colors = {
     bg = '#282c34',
@@ -911,13 +911,6 @@ set makeprg=make
 " - :cl to list errors
 " - :cc# to jump to error by number
 " - :cn and :cp to navigate forward and back
-  let g:vimwiki_list = [{'path': '~/reps/wiki/_posts/',
-                       \ 'syntax': 'markdown', 'ext': '.md',
-                       \ 'auto_tags': 1,
-                       \ 'auto_generate_links': 1,
-                       \ 'auto_generate_tags': 1}]
-" ============ END ============================
-"
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
