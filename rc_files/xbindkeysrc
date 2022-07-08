@@ -40,7 +40,7 @@
 
 # Examples of commands:
 
-"xbindkeys_show" 
+"xbindkeys_show"
   control+shift + q
 
 # set directly keycode (here control + f with my keyboard)
@@ -63,11 +63,17 @@
 "jumpapp Telegram"
   control + 3
 
-"jumpapp opera" 
+"jumpapp opera"
   control + 2
 
-"jumpapp xfce4-terminal" 
+"jumpapp tilix"
   control + 1
+
+"amixer -D pulse set Master 5%-"
+  F2
+
+"amixer -D pulse set Master 5%+"
+  F3
 
 
 #"xterm -geom 50x20+20+20"
