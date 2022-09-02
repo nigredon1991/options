@@ -33,6 +33,7 @@ Plug 'thiagoalessio/rainbow_levels.vim'
 "Plun 'rosenfeld/conque-term'          " Consoles as buffers
 Plug 'tpope/vim-surround'           " ysiw] - заковычить слово, cst} - изменить на скобки, ds} - удалить ковычки
 Plug 'tpope/vim-repeat'
+Plug 'windwp/nvim-autopairs'
 " Plug 'vim-airline/vim-airline-themes'
 
 "- ----------- -= == Languages support == =-------------
@@ -52,6 +53,7 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-hop.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Plug 'nvim-treesitter/playground'
 Plug 'ThePrimeagen/refactoring.nvim'
@@ -83,18 +85,24 @@ Plug 'will133/vim-dirdiff'
 Plug 'romgrk/todoist.nvim', { 'do': ':TodoistInstall' }
 
 " vim  --cmd "let g:vimspector_enable_mappings='HUMAN'"
-Plug 'puremourning/vimspector'
+Plug 'puremourning/vimspector' " multi language graphical debugger for Vim
 
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'feline-nvim/feline.nvim', { 'branch': 'develop' }
 
-Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'SmiteshP/nvim-gps'
 Plug 'wellle/context.vim'
 Plug 'wellle/targets.vim'
 Plug 'tpope/vim-abolish'
+Plug 'psliwka/vim-smoothie' " Удобная прокрутка Ctrl+d
+Plug 'mg979/vim-visual-multi', {'branch': 'master'} " Ctrl + arrow - multiline editing
+
+Plug 'camspiers/animate.vim'
+Plug 'camspiers/lens.vim'
+Plug 'AndrewRadev/sideways.vim'
 
 
 call plug#end()
@@ -200,6 +208,7 @@ if has('nvim')
     augroup END
 
 lua << EOF
+require("nvim-autopairs").setup()
 require('gitsigns').setup()
 require('feline.providers.git').git_info_exists()
 
@@ -552,6 +561,7 @@ let g:ale_linters = {
                      \ 'dart': ['dart_analyze', 'language_server'],
                      \ 'rust': ['cargo', 'rls'],
                      \ 'sql': ['sqlint'],
+                     \ 'dockerfile': ['hadolint'],
                      \}
 
 let g:ale_fixers = {
@@ -918,6 +928,10 @@ let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:CheatSheetDoNotMap=1
 let g:CheatDoNotReplaceKeywordPrg=1
 
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 3
+
 let g:netrw_list_hide= '.*\.swp$'
 let g:netrw_list_hide= netrw_gitignore#Hide().'.*\.swp$'
 let g:netrw_liststyle = 1
@@ -983,6 +997,8 @@ require('telescope').setup{
     qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
   }
 }
+require('telescope').load_extension('fzf')
+
 EOF
 
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -993,5 +1009,19 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " for show all resulsts in quickfixlist <C-q> - https://github.com/nvim-telescope/telescope.nvim/issues/42
 map <leader>l :RainbowLevelsToggle<cr>
+
+" Go to next or prev tab by H and L accordingly
+nnoremap H gT
+nnoremap L gt
+
+" Plug 'camspiers/lens.vim'
+let g:lens#height_resize_max = 30
+let g:lens#height_resize_min = 20
+let g:lens#width_resize_max = 120
+let g:lens#width_resize_min = 100
+
+" Plug 'AndrewRadev/sideways.vim'
+" nnoremap <c-w> :SidewaysLeft<cr>
+" nnoremap <c-s> :SidewaysRight<cr>
 
 let g:mkdp_auto_start = 0

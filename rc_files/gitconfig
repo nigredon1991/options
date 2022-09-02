@@ -1,0 +1,23 @@
+[user]
+	email = <email>
+	name = <Name>
+[filter "lfs"
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[pull]
+	rebase = true
+[color]
+	ui = auto
+[alias]
+    sset = "!f() { git submodule set-branch --branch ${1} ${2} ; }; f"
+    schbr = "!git submodule foreach  --recursive 'git checkout -B  $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master )'"
+    sdiff = "!git diff --submodule=diff"
+    sadd = "!git submodule foreach git add -p"
+    scommit = "!git submodule foreach 'git diff --cached  --exit-code || git commit' "
+    spush = "!f() { git push origin ${1} --recurse-submodules=on-demand ; } ; f"
+    logs = "!git log -p  --submodule  --pretty=format:'%h%x09%an%x09%ad%x09%s'"
+[core]
+	editor = /usr/local/bin/nvim
+	quotepath = off
