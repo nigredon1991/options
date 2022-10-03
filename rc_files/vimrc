@@ -7,7 +7,7 @@ filetype off                  " required
 " pip install neovim black wemake-python-styleguide pylint mypy python-language-server
 "== == == == == == == == == == == == == == == == == == == == == == == == == == =
 "
-let g:polyglot_disabled = ['rst', 'json', 'template']
+let g:polyglot_disabled = ['rst', 'json', 'template', 'csv']
 let g:groovy_ignore_groovydoc=1 " in Jenkinsfile include javascript lang options, don't need this
 " let g:polyglot_disabled = ['rst', 'json', 'template', 'ftdetect']
 call plug#begin('~/.vim/plugged')
@@ -41,7 +41,6 @@ Plug 'windwp/nvim-autopairs'
 Plug 'plytophogy/vim-virtualenv'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'w0rp/ale'          " Asynchronous Lint Engine
-Plug 'maralla/completor.vim' " Заканчиватель
 Plug 'powerman/vim-plugin-ruscmd' " Команды на русском языке
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
@@ -90,20 +89,21 @@ Plug 'puremourning/vimspector' " multi language graphical debugger for Vim
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'feline-nvim/feline.nvim', { 'branch': 'develop' }
+Plug 'feline-nvim/feline.nvim'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'SmiteshP/nvim-gps'
 Plug 'wellle/context.vim'
-Plug 'wellle/targets.vim'
-Plug 'tpope/vim-abolish'
 Plug 'psliwka/vim-smoothie' " Удобная прокрутка Ctrl+d
-Plug 'mg979/vim-visual-multi', {'branch': 'master'} " Ctrl + arrow - multiline editing
 
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
 Plug 'AndrewRadev/sideways.vim'
 
+Plug 'tpope/vim-fugitive'
+Plug 'rbong/vim-flog'
+
+Plug 'mechatroner/rainbow_csv'
 
 call plug#end()
 "call vundle#end()                    " required
@@ -192,7 +192,6 @@ map <C-l> <C-w><Right>
 map <C-h> <C-w><Left>
 nnoremap <silent> <bs> <C-w><Left>
 tnoremap <C-\> <C-\><C-n>
-inoremap jk <esc>
 
 nnoremap n nzz
 nnoremap N Nzz
@@ -200,6 +199,32 @@ nnoremap N Nzz
 " move vertically by visual line with j and k
 nnoremap j gj
 nnoremap k gk
+
+
+let mapleader = "\<Space>"
+
+nnoremap <leader>P ggVGy<C-o>
+
+"" greatest remap ever
+xnoremap <leader>p "_dP
+
+inoremap "<C-c>" "<Esc>"
+
+
+nnoremap "<leader>d" "_d"
+vnoremap "<leader>d" "_d"
+
+vnoremap "<leader>d" "_d"
+
+" nnoremap <C-d> <C-d>zz
+" nnoremap <C-u> <C-u>zz
+
+nnoremap <unique> <C-D> <cmd>call smoothie#do("\<C-D>zz") <CR>
+vnoremap <unique> <C-D> <cmd>call smoothie#do("\<C-D>zz") <CR>
+nnoremap <unique> <C-B> <cmd>call smoothie#do("\<C-B>zz") <CR>
+vnoremap <unique> <C-B> <cmd>call smoothie#do("\<C-B>zz") <CR>
+
+
 
 if has('nvim')
     augroup TerminalStuff
@@ -523,9 +548,7 @@ EOF
 
 endif
 
-let mapleader = "\<Space>"
 
-nnoremap <leader>P ggVGy<C-o>
 nmap <silent> <leader>/ :nohlsearch<CR>
 
 nnoremap <Leader>+ :vertical resize +5<CR>
@@ -928,33 +951,24 @@ let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:CheatSheetDoNotMap=1
 let g:CheatDoNotReplaceKeywordPrg=1
 
-let g:netrw_banner = 0
-let g:netrw_liststyle = 3
-let g:netrw_browse_split = 3
+let g:netrw_banner = 1
+" let g:netrw_liststyle = 3
+" let g:netrw_browse_split = 3
 
 let g:netrw_list_hide= '.*\.swp$'
 let g:netrw_list_hide= netrw_gitignore#Hide().'.*\.swp$'
-let g:netrw_liststyle = 1
 let g:netrw_ftp_cmd= "ftp -p"
 let g:netrw_uid = "anonymous"
 let g:netrw_passwd = "anonymous"
 " print file path
 " map \f ^<C-V>$jy:echo @%.@"<CR>
-map \F ^<C-V>$jy:echo substitute(@%,'ftp://anonymous','ftp://anonymous:pass','g').@"<CR>
-map \f ^<C-V>iW"xy :let @+=substitute(@%,'ftp://anonymous','ftp://anonymous:pass','g').@x"<CR>
+map \F ^<C-V>$jy:echo substitute(@%,'ftp://','ftp://anonymous:pass@','g').@"<CR>
+map \f ^<C-V>iW"xy :let @+=substitute(@%,'ftp://','ftp://anonymous:pass@','g').@x"<CR>
 " https://vi.stackexchange.com/questions/26007/getting-gx-to-open-a-url
 nmap gx :silent execute "!xdg-open " . shellescape("<cfile>")<CR>
 
-
-" let g:completor_disable_filename_c = 1
-" let g:completor_disable_filename_cpp = 1
-" let g:completor_disable_filename = 1
-" let g:completor_disable_buffer = 1
-" let g:completor_disable_ultisnips = 1
-" let g:completor_enable_ultisnips= ['python', 'c', 'sh', 'cpp']
-" let g:completor_enable_buffer= ['python', 'c', 'sh', 'cpp']
-"
 lua << EOF
+
 require('telescope').setup{
   defaults = {
     vimgrep_arguments = {
@@ -1025,3 +1039,6 @@ let g:lens#width_resize_min = 100
 " nnoremap <c-s> :SidewaysRight<cr>
 
 let g:mkdp_auto_start = 0
+
+
+let g:rcsv_delimiters = ["\t", ",", "|"]
