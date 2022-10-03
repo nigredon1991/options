@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Easy deployment
+# ~/.local/bin/rd
+
+set -eux
+
+CUR_DIR=$PWD/
+
+. $CUR_DIR/.bashrc
+
+rsync -r -a -v --exclude-from $CUR_DIR/.gitignore -e ssh $CUR_DIR $REMOTE_PATH
