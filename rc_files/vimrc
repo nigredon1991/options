@@ -104,6 +104,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'rbong/vim-flog'
 
 Plug 'mechatroner/rainbow_csv'
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 call plug#end()
 "call vundle#end()                    " required
@@ -234,6 +235,17 @@ if has('nvim')
 
 lua << EOF
 
+
+vim.g.indent_blankline_char_list = {'|', '¦', '┆', '┊'}
+vim.g.indent_blankline_show_first_indent_level = false
+vim.g.indent_blankline_context_char_list = {'┃', '║', '╬', '█'}
+
+require("indent_blankline").setup {
+    show_trailing_blankline_indent = true,
+    space_char_blankline = " ",
+    show_current_context = true,
+    show_current_context_start = true,
+}
 
 require'lspconfig'.pyright.setup{}
 local opts = { noremap=true, silent=true }
