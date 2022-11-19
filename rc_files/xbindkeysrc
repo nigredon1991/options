@@ -75,6 +75,11 @@
 "amixer -D pulse set Master 5%+"
   F3
 
+# "playerctl play-pause"
+#   F4
+
+# "playerctl next"
+#   F5
 
 #"xterm -geom 50x20+20+20"
 #   Shift+Mod2+alt + s
