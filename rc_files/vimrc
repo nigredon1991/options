@@ -618,7 +618,6 @@ EOF
 
 endif
 
-
 nmap <silent> <leader>/ :nohlsearch<CR>
 
 nnoremap <Leader>+ :vertical resize +5<CR>
@@ -669,6 +668,7 @@ let g:ale_fixers = {
                      \ 'dart': ['dart-format'],
                      \ 'rust': ['rustfmt'],
                      \ 'sql': ['pgformatter'],
+                     \ 'toml': ['dprint'],
                      \}
 let g:ale_json_jq_options= ""
 let g:ale_elixir_elixir_ls_release= "/usr/lib/elixir-ls"
@@ -678,6 +678,7 @@ let g:ale_elixir_elixir_ls_release= "/usr/lib/elixir-ls"
 " #!/bin/bash
 " dart /home/$USER/reps/flutter/bin/cache/dart-sdk/bin/snapshots/analysis_server.dart.snapshot --lsp --client-version 1.2
 
+let g:ale_dprint_config = '~/.dprint/dprint.json'
 let g:ale_rust_rustc_options= '-O ' " --error-format=json
 let g:ale_c_cc_options= '-Wno-gnu'
 let g:ale_c_cppcheck_executable= 'cppcheck'
@@ -807,6 +808,7 @@ augroup vimrc_autocmds
 augroup END
 
 " nnoremap <F4> :!scp %:p example_server.lala:%:p <CR>
+
 let g:easytags_whitelist = ['reps']
 
 " ============ CSCOPE ============================
