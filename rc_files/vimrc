@@ -4,7 +4,7 @@ scriptencoding utf-8
 filetype off                  " required
 
 " Next time pip update
-" pip install neovim black wemake-python-styleguide pylint mypy python-language-server
+" pip install neovim black wemake-python-styleguide pylint mypy python-language-server pyright
 "== == == == == == == == == == == == == == == == == == == == == == == == == == =
 "
 let g:polyglot_disabled = ['rst', 'json', 'template', 'csv']
@@ -94,6 +94,7 @@ Plug 'feline-nvim/feline.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'SmiteshP/nvim-gps'
 Plug 'wellle/context.vim'
+Plug 'wellle/targets.vim' " More interesting text objects
 Plug 'psliwka/vim-smoothie' " Удобная прокрутка Ctrl+d
 
 Plug 'camspiers/animate.vim'
@@ -610,6 +611,7 @@ function my_send_to_server()
      print(result)
    end
 end
+
 local map = vim.api.nvim_set_keymap
 local default_opts = {noremap = true, silent = false}
 map("n", "<F4>", ':lua my_send_to_server() <CR>', default_opts)

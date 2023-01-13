@@ -40,8 +40,8 @@
 
 # Examples of commands:
 
-"xbindkeys_show"
-  control+shift + q
+# "xbindkeys_show"
+#   control+shift + q
 
 # set directly keycode (here control + f with my keyboard)
 #"xterm"
@@ -57,9 +57,6 @@
 "jumpapp Slack"
   control + 5
 
-"jumpapp Spotify"
-  control + 4
-
 "jumpapp Telegram"
   control + 3
 
@@ -69,11 +66,11 @@
 "jumpapp tilix"
   control + 1
 
-"amixer -D pulse set Master 5%-"
-  F2
+# "amixer -D pulse set Master 5%-"
+#   F2
 
-"amixer -D pulse set Master 5%+"
-  F3
+# "amixer -D pulse set Master 5%+"
+#   F3
 
 # "playerctl play-pause"
 #   F4
