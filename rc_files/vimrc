@@ -84,7 +84,7 @@ Plug 'will133/vim-dirdiff'
 Plug 'romgrk/todoist.nvim', { 'do': ':TodoistInstall' }
 
 " vim  --cmd "let g:vimspector_enable_mappings='HUMAN'"
-Plug 'puremourning/vimspector' " multi language graphical debugger for Vim
+" Plug 'puremourning/vimspector' " multi language graphical debugger for Vim
 
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
@@ -156,8 +156,8 @@ set grepprg=grep\ -Irn\ $*\ /dev/null
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set backspace=indent,eol,start
-aunmenu Help.
-aunmenu Window.
+" aunmenu Help.
+" aunmenu Window.
 set mousemodel=popup
 set ruler
 set completeopt-=preview
