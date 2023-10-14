@@ -433,7 +433,6 @@ map("i", "<C-c>", "<Esc>", {})
 -- Удаление без использования стандартного буфера
 map("n", "<leader>d", "_d", {})
 map("v", "<leader>d", "_d", {})
-map("v", "<leader>d", "_d", {})
 
 local null_ls = require("null-ls")
 
@@ -479,3 +478,82 @@ null_ls.setup({
 	},
 })
 
+
+
+
+
+-- DAP configuration debug
+local dap = require('dap')
+dap.adapters.bashdb = {
+  type = 'executable';
+  command = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/bash-debug-adapter';
+  name = 'bashdb';
+}
+
+dap.configurations.sh = {
+  {
+    type = 'bashdb';
+    request = 'launch';
+    name = "Launch file";
+    showDebugOutput = true;
+    pathBashdb = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb';
+    pathBashdbLib = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir';
+    trace = true;
+    file = "${file}";
+    program = "${file}";
+    cwd = '${workspaceFolder}';
+    pathCat = "cat";
+    pathBash = "/bin/bash";
+    pathMkfifo = "mkfifo";
+    pathPkill = "pkill";
+    args = {};
+    env = {};
+    terminalKind = "integrated";
+  }
+}
+
+require('dap-python').setup('/home/.../venv/bin/python')
+
+dap.adapters.python = function(cb, config)
+  if config.request == 'attach' then
+    ---@diagnostic disable-next-line: undefined-field
+    local port = (config.connect or config).port
+    ---@diagnostic disable-next-line: undefined-field
+    local host = (config.connect or config).host or '127.0.0.1'
+    cb({
+      type = 'server',
+      port = assert(port, '`connect.port` is required for a python `attach` configuration'),
+      host = host,
+      options = {
+        source_filetype = 'python',
+      },
+    })
+  else
+    cb({
+      type = 'executable',
+      command = '/home/.../venv/bin/python',
+      args = { '-m', 'debugpy.adapter' },
+      options = {
+        source_filetype = 'python',
+      },
+    })
+  end
+end
+
+
+dap.adapters.gdb = {
+  type = "executable",
+  command = "gdb-multiarch",
+}
+
+dap.configurations.rust = {
+  {
+    name = "Launch",
+    type = "gdb",
+    request = "launch",
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'target/thumbv7m-none-eabi/debug/examples/hello')
+    end,
+    cwd = "${workspaceFolder}",
+  },
+}

@@ -66,6 +66,8 @@ return require('packer').startup(function(use)
         requires = { 'nvim-tree/nvim-web-devicons', opt = true }
     }
     use 'jose-elias-alvarez/null-ls.nvim'
+    use 'mfussenegger/nvim-dap'
+    use 'mfussenegger/nvim-dap-python'
 
     -- Lua
     -- use "dhananjaylatkar/cscope_maps.nvim"  -- пока не работает ничего
