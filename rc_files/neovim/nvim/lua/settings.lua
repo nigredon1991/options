@@ -3,20 +3,22 @@
 -- vis" -- visual surround ""
 -- cis" -- change surround ""
 -- dis" -- delete surround ""
+-- : MasonInstall autoflake autopep8 bash-language-server beautysh black blackd-client clang-format clangd cmake-language-server codespell cpplint cpptools dprint flake8 hadolint isort jedi-language-server jq jq-lsp json-lsp jsonlint lua-language-server luacheck luaformatter luau-lsp luau_lsp markdownlint mypy prettier prettierd pydocstyle pylint pyproject-flake8 pyre pyright python-lsp-server pylsp ruff ruff-lsp ruff_lsp rust-analyzer rustfmt shellcheck shellharden shfmt sql-formatter sqlls sqls usort vim-language-server write-good yaml-language-server yamlfmt yamllint
 --
 --
-
 local cmd = vim.cmd -- execute Vim commands
 local exec = vim.api.nvim_exec -- execute Vimscript
 local g = vim.g -- global variables
 local opt = vim.opt -- global/buffer/windows-scoped options
 local keymap = vim.keymap
 
+-- Commands keymaps
+keymap.set("c", "W", "write", {}) -- sometime w key click with shift
 require("mason").setup()
 require("mason-lspconfig").setup()
-require("lualine").setup({ options = { theme = "auto" }, sections = { lualine_c = { { "filename", path = 1 } } } })
 require("nvim-web-devicons").setup({ default = true })
 
+opt.path:append("**")
 -- На данный момент не работает ничего. Потом ещё попробую
 -- require('cscope_maps').setup({
 --   disable_maps = false, -- true disables my keymaps, only :Cscope will be loaded
@@ -28,16 +30,13 @@ require("nvim-web-devicons").setup({ default = true })
 cmd("colorscheme smyck")
 cmd("filetype indent plugin on")
 
-g.mapleader = " "
-g.maplocalleader = " "
-
 opt.wrap = false
 opt.number = true
 opt.splitbelow = true
 opt.splitright = true
 opt.clipboard = "unnamedplus"
 opt.backspace = "indent,eol,start"
-opt.mouse = "a"
+opt.mouse = ""
 opt.mousemodel = "popup_setpos"
 opt.ruler = true
 opt.completeopt = { "preview", "noinsert", "noselect" }
@@ -56,10 +55,62 @@ opt.undodir = "/tmp/"
 opt.wildmenu = true
 opt.wildmode = { "list", "longest" }
 
-opt.expandtab = true -- Use spaces instead of tabs
+opt.expandtab = false
 opt.shiftwidth = 4 -- Shift 4 spaces when tab
 opt.tabstop = 4 -- 1 tab == 4 spaces
 opt.smartindent = true -- Autoindent new lines
+
+require("nvim-web-devicons").setup({ default = true })
+require("mason").setup()
+require("mason-lspconfig").setup()
+require("lualine").setup({
+	options = { theme = "auto" },
+	sections = { lualine_c = { { "filename", path = 1 } } },
+})
+-- cmd("au BufRead,BufNewFile *.yaml if match('.*ansible.*', getline(1)) | setlocal ft=yaml.ansible | else | writefile('0') | endif ")
+-- check first line match ansible
+cmd("au BufRead,BufNewFile *.yaml if match('.*ansible.*', getline(1)) | setlocal ft=yaml.ansible | endif ")
+cmd("au BufRead,BufNewFile *playbook.yaml setlocal            ft=yaml.ansible")
+cmd("au BufRead,BufNewFile */playbooks/*.yml setlocal         ft=yaml.ansible")
+cmd("au BufRead,BufNewFile */playbooks/*.yaml setlocal        ft=yaml.ansible")
+cmd("au BufRead,BufNewFile */roles/*/tasks/*.yml setlocal     ft=yaml.ansible")
+cmd("au BufRead,BufNewFile */roles/*/tasks/*.yaml setlocal    ft=yaml.ansible")
+cmd("au BufRead,BufNewFile */roles/*/handlers/*.yml setlocal  ft=yaml.ansible")
+cmd("au BufRead,BufNewFile */roles/*/handlers/*.yaml setlocal ft=yaml.ansible")
+
+-- for langmapper
+g.mapleader = " "
+g.maplocalleader = " "
+
+local function escape(str)
+	-- You need to escape these characters to work correctly
+	local escape_chars = [[;,."|\]]
+	return vim.fn.escape(str, escape_chars)
+end
+
+-- Recommended to use lua template string
+local en = [[`qwertyuiop[]asdfghjkl;'zxcvbnm]]
+local ru = [[ёйцукенгшщзхъфывапролджэячсмить]]
+local en_shift = [[~QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>$]]
+local ru_shift = [[ËЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;]]
+
+vim.opt.langmap = vim.fn.join({
+	-- | `to` should be first     | `from` should be second
+	escape(ru_shift)
+		.. ";"
+		.. escape(en_shift),
+	escape(ru) .. ";" .. escape(en),
+}, ",")
+
+require("langmapper").automapping({ global = true, buffer = true })
+
+-- На данный момент не работает ничего. Потом ещё попробую
+-- require('cscope_maps').setup({
+--   disable_maps = false, -- true disables my keymaps, only :Cscope will be loaded
+--   cscope = {
+--     db_file = "./cscope.out", -- location of cscope db file
+--   },
+-- })
 
 local augroup = vim.api.nvim_create_augroup -- Create/get autocommand group
 local autocmd = vim.api.nvim_create_autocmd
@@ -67,19 +118,55 @@ local autocmd = vim.api.nvim_create_autocmd
 augroup("setIndent", { clear = true })
 autocmd("FileType", {
 	group = "setIndent",
-	pattern = { "xml", "html", "xhtml", "css", "scss", "javascript", "typescript", "yaml", "lua", "c", "cpp", "rust" },
+	pattern = {
+		"yaml",
+		"xml",
+		"html",
+		"xhtml",
+		"css",
+		"scss",
+		"javascript",
+		"typescript",
+		"lua",
+		"rust",
+	},
 	command = "setlocal shiftwidth=2 tabstop=2 expandtab",
 })
 autocmd("FileType", {
 	group = "setIndent",
-	pattern = { "bash", "ruby", "python", "javascript", "php", "vim", "racket" },
+	pattern = { "c", "cpp" },
+	command = "setlocal shiftwidth=2 tabstop=2 noexpandtab",
+})
+autocmd("FileType", {
+	group = "setIndent",
+	pattern = {
+		"sh",
+		"bash",
+		"ruby",
+		"python",
+		"javascript",
+		"php",
+		"vim",
+		"racket",
+	},
 	command = "setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=4",
 })
 
 augroup("setExcess", { clear = true })
 autocmd("FileType", {
 	group = "setExcess",
-	pattern = { "xml", "html", "xhtml", "css", "scss", "javascript", "typescript", "yaml", "lua" },
+	pattern = {
+		"xml",
+		"html",
+		"xhtml",
+		"css",
+		"scss",
+		"javascript",
+		"typescript",
+		"yml",
+		"yaml",
+		"lua",
+	},
 	command = " match Excess /\\%100v.*/",
 })
 
@@ -113,12 +200,8 @@ require("telescope").setup({
 		sorting_strategy = "descending",
 		layout_strategy = "horizontal",
 		layout_config = {
-			horizontal = {
-				mirror = false,
-			},
-			vertical = {
-				mirror = false,
-			},
+			horizontal = { mirror = false },
+			vertical = { mirror = false },
 		},
 		file_sorter = require("telescope.sorters").get_fuzzy_file,
 		file_ignore_patterns = {},
@@ -136,12 +219,20 @@ require("telescope").setup({
 })
 require("telescope").load_extension("fzf")
 local telescope_builtin = require("telescope.builtin")
-
+-- <C-x> go to file selection as a split
+-- <C-v> go to file selection as a vsplit
+-- <C-t> go to a file in a new tab
 keymap.set("n", "<leader>ff", telescope_builtin.find_files, {})
 keymap.set("n", "<leader>fg", telescope_builtin.live_grep, {})
 keymap.set("n", "<leader>gs", telescope_builtin.grep_string, {})
 keymap.set("n", "<leader>fb", telescope_builtin.buffers, {})
 keymap.set("n", "<leader>fh", telescope_builtin.help_tags, {})
+vim.api.nvim_set_keymap(
+	"n",
+	"<leader>sd",
+	[[<cmd>lua require('telescope.builtin').find_files({search_file=vim.fn.expand("<cword>")})<cr>]],
+	{ silent = true, noremap = true }
+)
 
 g.indent_blankline_char_list = { "|", "¦", "┆", "┊" }
 g.indent_blankline_show_first_indent_level = false
@@ -163,6 +254,8 @@ keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
 
 -- For open FTP
+g.netrw_ftp_cmd = "ftp -p"
+g.netrw_banner = 1
 g.netrw_uid = "anonymous"
 g.netrw_passwd = "anonymous"
 keymap.set("n", "\\F", "<cmd>lua ", {})
@@ -178,13 +271,10 @@ require("nvim-treesitter.configs").setup({
 	highlight = {
 		enable = true,
 		additional_vim_regex_highlighting = false,
+		disable = { "csv" },
 	},
 	ident = { enable = true },
-	rainbow = {
-		enable = true,
-		extended_mode = true,
-		max_file_lines = nil,
-	},
+	rainbow = { enable = true, extended_mode = true, max_file_lines = nil },
 })
 
 --
@@ -207,24 +297,11 @@ require("nvim-tree").setup({
 	hijack_cursor = true,
 	update_cwd = false,
 	actions = {
-		open_file = {
-			quit_on_open = true,
-		},
-		change_dir = {
-			enable = false,
-			global = false,
-		},
+		open_file = { quit_on_open = true },
+		change_dir = { enable = false, global = false },
 	},
-	update_focused_file = {
-		enable = true,
-		update_cwd = false,
-		ignore_list = {},
-	},
-	git = {
-		enable = true,
-		ignore = false,
-		timeout = 500,
-	},
+	update_focused_file = { enable = true, update_cwd = false, ignore_list = {} },
+	git = { enable = true, ignore = false, timeout = 500 },
 })
 
 -- Use an on_attach function to only map the following keys
@@ -255,9 +332,7 @@ local on_attach = function(client, bufnr)
 	end, bufopts)
 end
 
-local lsp_flags = {
-	debounce_text_changes = 150,
-}
+local lsp_flags = { debounce_text_changes = 150 }
 
 -- for null-ls create commands
 --
@@ -338,42 +413,81 @@ require("lspconfig")["rust_analyzer"].setup({
 	flags = lsp_flags,
 })
 
-require("lspconfig").pyright.setup({
-	on_attach = on_attach,
-	flags = lsp_flags,
-})
-require("lspconfig").pylsp.setup({
-	on_attach = on_attach,
-	flags = lsp_flags,
-	settings = {
-		pylsp = {
-			plugins = {
-				pycodestyle = {
-					ignore = { "W391" },
-					maxLineLength = 100,
-				},
-			},
-		},
-	},
-})
+require("lspconfig")["bashls"].setup({ on_attach = on_attach, flags = lsp_flags })
+
+-- require("lspconfig")["ansiblels"].setup({
+-- 	on_attach = on_attach,
+-- 	flags = lsp_flags,
+-- })
+
+-- local configs = require('lspconfig/configs')
+local util = require("lspconfig/util")
+
+local path = util.path
+
+local function get_python_path(workspace)
+	-- Use activated virtualenv.
+	if vim.env.VIRTUAL_ENV then
+		return path.join(vim.env.VIRTUAL_ENV, "bin", "python")
+	end
+
+	-- Find and use virtualenv in workspace directory.
+	for _, pattern in ipairs({ "*", ".*", "**" }) do
+		local match = vim.fn.glob(path.join(workspace, pattern, "pyvenv.cfg"))
+		if match ~= "" then
+			return path.join(path.dirname(match), "bin", "python")
+		end
+	end
+
+	-- Fallback to system Python.
+	return exepath("python3") or exepath("python") or "python"
+end
+
+-- require'py_lsp'.setup {
+--   -- This is optional, but allows to create virtual envs from nvim
+--   default_venv_name = "venv"
+-- }
+
+-- require("lspconfig").pyright.setup({
+-- 	before_init = function(_, config)
+-- 		config.settings.python.pythonPath = get_python_path(config.root_dir)
+-- -- 		config.settings.python.stubPath = "/home/nglazov/reps/stubs-typing/"
+-- 	end,
+-- 	on_attach = on_attach,
+-- 	flags = lsp_flags,
+-- })
+-- require("lspconfig").pylsp.setup({
+-- 	on_attach = on_attach,
+-- 	flags = lsp_flags,
+-- 	settings = {
+-- 		pylsp = {
+-- 			plugins = {
+-- 				pycodestyle = {
+-- 					ignore = { "W391" },
+-- 					maxLineLength = 100,
+-- 				},
+-- 			},
+-- 		},
+-- 	},
+-- })
 require("lspconfig").lua_ls.setup({
 	on_attach = on_attach,
 	flags = lsp_flags,
-	settings = {
-		Lua = {
-			completion = {
-				callSnippet = "Replace",
-			},
-		},
-	},
+	settings = { Lua = { completion = { callSnippet = "Replace" } } },
 })
 
 function my_send_to_server()
 	local dir_send = {}
-	dir_send["/Local_dir"] =
-		"remote_user@remote_host:/remote/path"
+	dir_send["/Local_dir"] = "remote_user@remote_host:/remote/path"
 	local cur_pwd = vim.fn.expand("$PWD") .. "/"
 	if dir_send[cur_pwd] then
+		local handle_rm = io.popen("rm -rf " .. cur_pwd .. "/public")
+		local result_rm = handle_rm:read("*a")
+		print(result_rm)
+		local handle_rm_allure = io.popen("rm -rf " .. cur_pwd .. "/allure-results")
+		local result_rm_allure = handle_rm_allure:read("*a")
+		print(result_rm_allure)
+
 		local handle = io.popen(
 			"rsync -r -a -v --exclude-from $HOME/exclude_home2work.txt -e ssh " .. cur_pwd .. " " .. dir_send[cur_pwd]
 		)
@@ -413,6 +527,7 @@ vim.api.nvim_set_var("lens#width_resize_min", 100)
 
 -- rainbow csv plugin
 vim.api.nvim_set_var("rcsv_delimiters", { "\t", ",", "|" })
+vim.api.nvim_set_var("rbql_backend_language", "js")
 
 -- Map ctrl-movement keys to window switching
 
@@ -423,8 +538,8 @@ map("n", "<C-h>", "<C-w><Left>", {})
 
 map("n", "n", "nzz", {})
 map("n", "N", "Nzz", {})
-map("n", "j", "gj", {})
-map("n", "k", "gk", {})
+-- map("n", "j", "gj", {})
+-- map("n", "k", "gk", {})
 map("n", "<leader>P", "ggVGy<C-o>", {}) -- скопировать весь файл
 
 -- Вариант выхода из insert режима
@@ -433,29 +548,35 @@ map("i", "<C-c>", "<Esc>", {})
 -- Удаление без использования стандартного буфера
 map("n", "<leader>d", "_d", {})
 map("v", "<leader>d", "_d", {})
+map("v", "<leader>d", "_d", {})
 
 local null_ls = require("null-ls")
 
 null_ls.setup({
-	debug = true,
+	-- debug = true,
 	sources = {
 		null_ls.builtins.formatting.lua_format,
 		null_ls.builtins.formatting.stylua,
-
 		null_ls.builtins.completion.spell,
 
 		null_ls.builtins.formatting.shfmt,
 		null_ls.builtins.diagnostics.shellcheck,
-
 		null_ls.builtins.formatting.jq,
-		null_ls.builtins.formatting.json_tool,
+		-- null_ls.builtins.formatting.json_tool,
 
 		null_ls.builtins.formatting.markdownlint,
 
 		null_ls.builtins.diagnostics.clang_check,
 
-		null_ls.builtins.diagnostics.mypy,
+		null_ls.builtins.diagnostics.mypy.with({
+			env = {
+				PYTHONPATH = table.concat(vim.split(vim.fn.expand("venv/*/*/*/*/"), "\n"), ":"),
+			},
+		}),
 		null_ls.builtins.diagnostics.pylint.with({
+			env = {
+				PYTHONPATH = table.concat(vim.split(vim.fn.expand("venv/*/*/*/*/"), "\n"), ":"),
+			},
 			diagnostics_postprocess = function(diagnostic)
 				diagnostic.code = diagnostic.message_id
 			end,
@@ -463,97 +584,108 @@ null_ls.setup({
 		null_ls.builtins.formatting.isort,
 		null_ls.builtins.formatting.black,
 		null_ls.builtins.formatting.autopep8,
+		null_ls.builtins.diagnostics.ruff,
+		null_ls.builtins.diagnostics.ansiblelint,
 		null_ls.builtins.formatting.autoflake,
 
 		null_ls.builtins.formatting.sql_formatter,
 		null_ls.builtins.diagnostics.sqlfluff.with({
 			extra_args = { "--dialect", "postgres" }, -- change to your dialect
 		}),
-
-		null_ls.builtins.formatting.prettier,
+		null_ls.builtins.formatting.prettier, -- { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "css", "scss", "less", "html", "json", "jsonc", "yaml", "markdown", "markdown.mdx", "graphql", "handlebars" }
 
 		null_ls.builtins.diagnostics.hadolint, -- Docker
-
-		null_ls.builtins.formatting.yamlfmt,
 	},
 })
 
-
-
-
-
 -- DAP configuration debug
-local dap = require('dap')
+local dap = require("dap")
 dap.adapters.bashdb = {
-  type = 'executable';
-  command = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/bash-debug-adapter';
-  name = 'bashdb';
+	type = "executable",
+	command = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/bash-debug-adapter",
+	name = "bashdb",
 }
 
 dap.configurations.sh = {
-  {
-    type = 'bashdb';
-    request = 'launch';
-    name = "Launch file";
-    showDebugOutput = true;
-    pathBashdb = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb';
-    pathBashdbLib = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir';
-    trace = true;
-    file = "${file}";
-    program = "${file}";
-    cwd = '${workspaceFolder}';
-    pathCat = "cat";
-    pathBash = "/bin/bash";
-    pathMkfifo = "mkfifo";
-    pathPkill = "pkill";
-    args = {};
-    env = {};
-    terminalKind = "integrated";
-  }
+	{
+		type = "bashdb",
+		request = "launch",
+		name = "Launch file",
+		showDebugOutput = true,
+		pathBashdb = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
+		pathBashdbLib = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir",
+		trace = true,
+		file = "${file}",
+		program = "${file}",
+		cwd = "${workspaceFolder}",
+		pathCat = "cat",
+		pathBash = "/bin/bash",
+		pathMkfifo = "mkfifo",
+		pathPkill = "pkill",
+		args = {},
+		env = {},
+		terminalKind = "integrated",
+	},
 }
 
-require('dap-python').setup('/home/.../venv/bin/python')
+require("dap-python").setup("/home/.../venv/bin/python")
 
 dap.adapters.python = function(cb, config)
-  if config.request == 'attach' then
-    ---@diagnostic disable-next-line: undefined-field
-    local port = (config.connect or config).port
-    ---@diagnostic disable-next-line: undefined-field
-    local host = (config.connect or config).host or '127.0.0.1'
-    cb({
-      type = 'server',
-      port = assert(port, '`connect.port` is required for a python `attach` configuration'),
-      host = host,
-      options = {
-        source_filetype = 'python',
-      },
-    })
-  else
-    cb({
-      type = 'executable',
-      command = '/home/.../venv/bin/python',
-      args = { '-m', 'debugpy.adapter' },
-      options = {
-        source_filetype = 'python',
-      },
-    })
-  end
+	if config.request == "attach" then
+		---@diagnostic disable-next-line: undefined-field
+		local port = (config.connect or config).port
+		---@diagnostic disable-next-line: undefined-field
+		local host = (config.connect or config).host or "127.0.0.1"
+		cb({
+			type = "server",
+			port = assert(port, "`connect.port` is required for a python `attach` configuration"),
+			host = host,
+			options = { source_filetype = "python" },
+		})
+	else
+		cb({
+			type = "executable",
+			command = "/home/.../venv/bin/python",
+			args = { "-m", "debugpy.adapter" },
+			options = { source_filetype = "python" },
+		})
+	end
 end
 
+-- vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+-- 	callback = function()
+-- 		require("lint").try_lint()
+-- 	end,
+-- })
 
-dap.adapters.gdb = {
-  type = "executable",
-  command = "gdb-multiarch",
-}
+require("treesitter-context").setup({
+	enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+	max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+	min_window_height = -1, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+	line_numbers = true,
+	multiline_threshold = 20, -- Maximum number of lines to collapse for a single context line
+	trim_scope = "outer", -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+	mode = "topline", -- Line used to calculate context. Choices: 'cursor', 'topline'
+	-- Separator between context and content. Should be a single character string, like '-'.
+	-- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+	separator = nil,
+	zindex = 20, -- The Z-index of the context window
+	on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
+})
+dap.adapters.gdb = { type = "executable", command = "gdb-multiarch" }
 
 dap.configurations.rust = {
-  {
-    name = "Launch",
-    type = "gdb",
-    request = "launch",
-    program = function()
-      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'target/thumbv7m-none-eabi/debug/examples/hello')
-    end,
-    cwd = "${workspaceFolder}",
-  },
+	{
+		name = "Launch",
+		type = "gdb",
+		request = "launch",
+		program = function()
+			return vim.fn.input(
+				"Path to executable: ",
+				vim.fn.getcwd() .. "/",
+				"target/thumbv7m-none-eabi/debug/examples/hello"
+			)
+		end,
+		cwd = "${workspaceFolder}",
+	},
 }
