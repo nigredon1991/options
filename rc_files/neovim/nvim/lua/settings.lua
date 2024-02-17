@@ -448,14 +448,28 @@ end
 --   default_venv_name = "venv"
 -- }
 
--- require("lspconfig").pyright.setup({
--- 	before_init = function(_, config)
--- 		config.settings.python.pythonPath = get_python_path(config.root_dir)
--- -- 		config.settings.python.stubPath = "/home/nglazov/reps/stubs-typing/"
--- 	end,
--- 	on_attach = on_attach,
--- 	flags = lsp_flags,
--- })
+require("lspconfig").pyright.setup({
+	before_init = function(_, config)
+		config.settings.python.pythonPath = get_python_path(config.root_dir)
+		-- config.settings.python.stubPath = "/home/nglazov/reps/stubs-typing/"
+	end,
+	settings = {
+		python = {
+			analysis = {
+				autoSearchPaths = true,
+				-- diagnosticMode = "openFilesOnly",
+				useLibraryCodeForTypes = true,
+        -- typeCheckingMode = "strict",
+        -- stubPath = "../stubs/",
+        extraPaths = vim.split(vim.fn.expand("./venv/*/*/*/*/"), "\n"),
+        -- vim.split(vim.fn.expand("./venv/*/*/*/*/"), "\n")
+        verboseOutput = true
+			},
+		},
+	},
+	on_attach = on_attach,
+	flags = lsp_flags,
+})
 -- require("lspconfig").pylsp.setup({
 -- 	on_attach = on_attach,
 -- 	flags = lsp_flags,
@@ -570,12 +584,17 @@ null_ls.setup({
 
 		null_ls.builtins.diagnostics.mypy.with({
 			env = {
-				PYTHONPATH = table.concat(vim.split(vim.fn.expand("venv/*/*/*/*/"), "\n"), ":"),
+				PYTHONPATH = "./:" .. table.concat(vim.split(vim.fn.expand("venv/*/*/*/*/"), "\n"), ":"),
+				MYPYPATH = "./:" .. table.concat(vim.tbl_filter(function(x)
+					if not (string.match(x, "mypy_extensions")) then
+						return "true"
+					end
+				end, vim.split(vim.fn.expand("venv/*/*/*/*/*/"), "\n"), ":")),
 			},
 		}),
 		null_ls.builtins.diagnostics.pylint.with({
 			env = {
-				PYTHONPATH = table.concat(vim.split(vim.fn.expand("venv/*/*/*/*/"), "\n"), ":"),
+				PYTHONPATH = "./:" .. table.concat(vim.split(vim.fn.expand("venv/*/*/*/*/"), "\n"), ":"),
 			},
 			diagnostics_postprocess = function(diagnostic)
 				diagnostic.code = diagnostic.message_id
