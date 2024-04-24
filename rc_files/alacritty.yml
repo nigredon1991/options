@@ -1,0 +1,18 @@
+font:
+  normal:
+    family: "Anonymice Nerd Font Mono"
+    style: Regular
+
+  bold:
+    family: "Anonymice Nerd Font Mono"
+    style: Bold
+
+  italic:
+    family: "Anonymice Nerd Font Mono"
+    style: Italic
+
+  bold_italic:
+    family: "Anonymice Nerd Font Mono"
+    style: Bold Italic
+
+  size: 14
