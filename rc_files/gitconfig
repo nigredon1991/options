@@ -1,7 +1,7 @@
 [user]
 	email = <email>
 	name = <Name>
-[filter "lfs"
+[filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
@@ -11,13 +11,29 @@
 [color]
 	ui = auto
 [alias]
-    sset = "!f() { git submodule set-branch --branch ${1} ${2} ; }; f"
-    schbr = "!git submodule foreach  --recursive 'git checkout -B  $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master )'"
-    sdiff = "!git diff --submodule=diff"
-    sadd = "!git submodule foreach git add -p"
-    scommit = "!git submodule foreach 'git diff --cached  --exit-code || git commit' "
-    spush = "!f() { git push origin ${1} --recurse-submodules=on-demand ; } ; f"
-    logs = "!git log -p  --submodule  --pretty=format:'%h%x09%an%x09%ad%x09%s'"
+	sset = "!f() { git submodule set-branch --branch ${1} ${2} ; }; f"
+	schbr = "!git submodule foreach  --recursive 'git checkout -B  $(git config -f $toplevel/.gitmodules submodule.$name.branch || echo master )'"
+	sdiff = "!git diff --submodule=diff"
+	sadd = "!git submodule foreach git add -p"
+	scommit = "!git submodule foreach 'git diff --cached  --exit-code || git commit' "
+	spush = "!f() { git push origin ${1} --recurse-submodules=on-demand ; } ; f"
+	logs = "!git log -p  --submodule  --pretty=format:'%h%x09%an%x09%ad%x09%s'"
+	cl = clean --exclude=.bashrc --exclude=.nvimrc -fdx
 [core]
 	editor = /usr/local/bin/nvim
 	quotepath = off
+	pager = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true    # use n and N to move between diff sections
+	light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+	dark = true
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	colorMoved = default
