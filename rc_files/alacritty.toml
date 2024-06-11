@@ -1,18 +1,18 @@
-font:
-  normal:
-    family: "Anonymice Nerd Font Mono"
-    style: Regular
+[font]
+size = 12
 
-  bold:
-    family: "Anonymice Nerd Font Mono"
-    style: Bold
+[font.bold]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Bold"
 
-  italic:
-    family: "Anonymice Nerd Font Mono"
-    style: Italic
+[font.bold_italic]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Bold Italic"
 
-  bold_italic:
-    family: "Anonymice Nerd Font Mono"
-    style: Bold Italic
+[font.italic]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Italic"
 
-  size: 14
+[font.normal]
+family = "JetBrainsMono Nerd Font Mono"
+style = "Regular"

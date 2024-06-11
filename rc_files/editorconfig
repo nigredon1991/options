@@ -1,0 +1,5 @@
+# ~/.editorconfig
+
+[*.sh]
+# like -i=4
+indent_style = tab

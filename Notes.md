@@ -34,3 +34,40 @@ Change volume step default by media keys in xfce from 5 to 3
 xfconf-query -c xfce4-panel -lv | grep pulseaudio
 xfconf-query -c xfce4-panel -p /plugins/plugin-<number>/volume-step --create -t int -s 3
 ```
+
+
+## Programs install arch
+
+```bash
+sudo pamac install git-delta xdotool xorg-xrandr plank ulauncherobsidian
+
+# plank without shadow
+cat 'shadow-exclude = "class_g = 'plank'";' > vim ~/.config/compton.conf
+
+
+# Run instruction from
+cd ~/reps
+git clone https://github.com/olback/autoplank
+```
+
+
+## Fix opera
+
+### Fix default browser for snap apps
+
+*~/.config/mimeapps.list*
+
+```
+x-scheme-handler/http=opera.desktop
+x-scheme-handler/https=opera.desktop
+```
+
+Fix ffmpeg
+
+```sh
+sudo pamac install opera opera-ffmpeg-codecs
+git clone https://github.com/Ld-Hagen/fix-opera-linux-ffmpeg-widevine.git
+cd ./fix-opera-linux-ffmpeg-widevine
+sudo ./scripts/fix-opera.sh
+sudo ./install.sh
+```
