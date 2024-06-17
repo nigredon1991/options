@@ -71,3 +71,12 @@ cd ./fix-opera-linux-ffmpeg-widevine
 sudo ./scripts/fix-opera.sh
 sudo ./install.sh
 ```
+
+# No lock lightdm
+
+*/etc/security/faillock.conf*
+
+```
+# The default is 600 (10 minutes).
+unlock_time = 0
+```

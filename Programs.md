@@ -9,3 +9,10 @@
 * `adobe-source-code-pro-fonts` - font for console
 * `tilix` - terminal # dconf load /com/gexperts/Tilix/ < tilix.dconf
 
+```bash
+sudo pacman -S fd zellij alacritty vim noto-fonts-emoji base-devel cmake expect fzf git-delta ethtool xorg-xrandr xdotool nmap git-lfs libxcrypt-compat docker python-pipx starship
+
+sudo pamac install  bazelisk syncthing steam net-snmp postgresql
+sudo pamac install  ocsinventory-agent
+```
+
