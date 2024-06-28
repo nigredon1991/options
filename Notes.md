@@ -51,7 +51,13 @@ git clone https://github.com/olback/autoplank
 ```
 
 
-## Fix opera
+## Fix opera ffmpeg
+```
+sudo snap install opera chromium-ffmpeg
+find /var/lib/snapd/snap/chromium-ffmpeg/ -name "libff*"
+# Get largest number
+sudo snap connect opera:chromium-ffmpeg-115541 chromium-ffmpeg:chromium-ffmpeg-115541
+```
 
 ### Fix default browser for snap apps
 
@@ -79,4 +85,5 @@ sudo ./install.sh
 ```
 # The default is 600 (10 minutes).
 unlock_time = 0
+deny = 150
 ```
